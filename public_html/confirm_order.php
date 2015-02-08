@@ -69,7 +69,7 @@
 			</form>
 		</td>
 		<td align="left">
-			<form id="cancel" action="screen1.php" method="post">
+			<form id="cancel" action="welcome.php" method="post">
 			<input type="submit" id="cancel" name="cancel" value="Cancel">
 			</form>
 		</td>

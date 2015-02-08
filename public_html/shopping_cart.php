@@ -18,12 +18,12 @@
 				</form>
 			</td>
 			<td align="center">
-				<form id="new_search" action="screen2.php" method="post">
+				<form id="new_search" action="search.php" method="post">
 					<input type="submit" name="search" id="search" value="New Search">
 				</form>								
 			</td>
 			<td align="center">
-				<form id="exit" action="screen1.php" method="post">
+				<form id="exit" action="welcome.php" method="post">
 					<input type="submit" name="exit" id="exit" value="EXIT 3-B.com">
 				</form>					
 			</td>

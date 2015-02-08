@@ -8,7 +8,7 @@
 	<table align="center" style="border:1px solid blue;">
 		<tr>
 			<td>Search for: </td>
-			<form action="screen3.php" method="get">
+			<form action="search_result.php" method="get">
 				<td><input name="searchfor" /></td>
 				<td><input type="submit" name="search" value="Search" /></td>
 		</tr>
@@ -31,7 +31,7 @@
 						<option value='all' selected='selected'>All Categories</option>
 						<option value='1'>Fantasy</option><option value='2'>Adventure</option><option value='3'>Fiction</option><option value='4'>Horror</option>				</select></td>
 				</form>
-	<form action="screen1.php" method="post">	
+	<form action="welcome.php" method="post">	
 				<td><input type="submit" name="exit" value="EXIT 3-B.com" /></td>
 			</form>
 		</tr>

@@ -57,12 +57,12 @@
 		</td>
 		</form>
 		<td align="right">
-			<form id="update" action="screen2.php" method="post">
+			<form id="update" action="search.php" method="post">
 			<input type="submit" id="update_customerprofile" name="update_customerprofile" value="New Search">
 			</form>
 		</td>
 		<td align="left">
-			<form id="cancel" action="screen1.php" method="post">
+			<form id="cancel" action="welcome.php" method="post">
 			<input type="submit" id="exit" name="exit" value="EXIT 3-B.com">
 			</form>
 		</td>

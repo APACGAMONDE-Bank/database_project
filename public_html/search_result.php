@@ -6,11 +6,11 @@
 	<script>
 	//redirect to reviews page
 	function review(isbn, title){
-		window.location.href="screen4.php?isbn="+ isbn + "&title=" + title;
+		window.location.href="review.php?isbn="+ isbn + "&title=" + title;
 	}
 	//add to cart
 	function cart(isbn, searchfor, searchon, category){
-		window.location.href="screen3.php?cartisbn="+ isbn + "&searchfor=" + searchfor + "&searchon=" + searchon + "&category=" + category;
+		window.location.href="search_result.php?cartisbn="+ isbn + "&searchfor=" + searchfor + "&searchon=" + searchon + "&category=" + category;
 	}
 	</script>
 </head>
@@ -47,12 +47,12 @@
 				</form>
 			</td>
 			<td align="center">
-				<form action="screen2.php" method="post">
+				<form action="search.php" method="post">
 					<input type="submit" value="New Search">
 				</form>
 			</td>
 			<td align="center">
-				<form action="screen1.php" method="post">
+				<form action="welcome.php" method="post">
 					<input type="submit" name="exit" value="EXIT 3-B.com">
 				</form>
 			</td>

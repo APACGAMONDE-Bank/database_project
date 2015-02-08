@@ -33,7 +33,7 @@
 		</tr>
 		<tr>
 			<td colspan="2" align="center">
-				<form action="screen2.php" method="post">
+				<form action="search.php" method="post">
 					<input type="submit" value="Done">
 				</form>
 			</td>
