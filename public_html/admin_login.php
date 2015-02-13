@@ -1,36 +1,19 @@
 
 <!DOCTYPE HTML>
 <?php
-//variables to report error information in
-$adminnameErr = $pinErr = "";
+require_once 'form_validator.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-	$filters = array (
-		'adminname' => FILTER_SANITIZE_STRING,
-		'pin' => FILTER_SANITIZE_STRING
-	); 
+	$rules = array(
+		'adminname' => array('rule_name' => 'login_name', 'required' => true, 'pretty_name' => 'Adminname'),
+		'pin' => array('rule_name' => 'pin', 'required' => true, 'pretty_name' => 'PIN')
+	);
 
-	$sanitized_post = filter_input_array(INPUT_POST, $filters);
-
-	if (empty($sanitized_post['adminname'])){
-		$adminnameErr = "adminname is required";
-	} /*TODO: else
-		if (adminname doesn't the DB adminname) {
-			$adminnameErr = "bad adminname";
-		}*/
-
-	if (empty($sanitized_post['pin'])){
-		$pinErr = "PIN is required";
-	} /* TODO: else 
-		if (adminname found and pin doesn't match adminname){
-			$pinErr = "pin doesn't match adminname";
-		}
-		*/
-
-	//if no errors
-	if ("{$adminnameErr}{$pinErr}" == "") {
-		//TODO: We have a valid admin, load admin info from DB? and create/update any necessary session vars?
+	$validator = new Form_Validator($rules, $_POST);
+	if ($validator->validateAndSanitizeForm()) {
+		//TODO: check DB and make sure pin matches admin login
+		//TODO: create/update any necessary $_SESSION vars and DB entries
 		header("Location:report.php");
 		exit();
 	}
@@ -44,13 +27,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
 <table align="center" style="border:2px solid blue;">
-		<form action="" method="post" id="adminlogin_screen">
+		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" id="adminlogin_screen">
 		<tr>
 			<td align="right">
 				Adminname<span style="color:red">*</span>:
 			</td>
 			<td align="left">
-				<input type="text" name="adminname" id="adminname" value="<?php echo $sanitized_post['adminname']?>">
+				<input type="text" name="adminname" id="adminname" value="<?php echo $validator->sanitized['adminname']?>">
 			</td>
 			<td align="right">
 				<input type="submit" name="login" id="login" value="Login">
@@ -72,8 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		</tr>
 	</table>
 	<div align="center">
-		<p><?php echo $adminnameErr?></p>
-		<p><?php echo $pinErr?></p>
+		<?php $validator->printErrors(); ?>
 	</div>
 </body>
 </html>

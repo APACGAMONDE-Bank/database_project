@@ -1,39 +1,19 @@
 
 <!DOCTYPE HTML>
 <?php
-
-//variables to report error information in
-$usernameErr = $pinErr = "";
+require_once 'form_validator.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-	$filters = array (
-		'username' => FILTER_SANITIZE_STRING,
-		'pin' => FILTER_SANITIZE_STRING
-	); 
+	$rules = array(
+		'username' => array('rule_name' => 'login_name', 'required' => true, 'pretty_name' => 'Username'),
+		'pin' => array('rule_name' => 'pin', 'required' => true, 'pretty_name' => 'PIN')
+	);
 
-	$sanitized_post = filter_input_array(INPUT_POST, $filters);
-
-	if (empty($sanitized_post['username'])){
-		$usernameErr = "username is required";
-	} /*TODO: else
-		if (username doesn't match a username in the database) {
-			$usernameErr = "username not found";
-		}*/
-
-	if (empty($sanitized_post['pin'])){
-		$pinErr = "PIN is required";
-	} /* TODO: else 
-		if (username found and pin doesn't match username){
-			$pinErr = "pin doesn't match username";
-		}
-		*/
-
-	
-	//if no errors
-	if ("{$usernameErr}{$pinErr}" == "") {
-
-		//TODO: We have a valid user, load their info from DB and create/update any necessary session vars
+	$validator = new Form_Validator($rules, $_POST);
+	if ($validator->validateAndSanitizeForm()) {
+		//TODO: check DB and make sure pin matches username login
+		//TODO: create/update any necessary $_SESSION vars and DB entries
 		header("Location:search.php");
 		exit();
 	}
@@ -52,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				Username<span style="color:red">*</span>:
 			</td>
 			<td align="left">
-				<input type="text" name="username" id="username" value="<?php echo $sanitzed_post['username']?>">
+				<input type="text" name="username" id="username" value="<?php echo $validator->sanitized['username']?>">
 			</td>
 			<td align="right">
 				<input type="submit" name="login" id="login" value="Login">
@@ -74,8 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		</tr>
 	</table>
 	<div align="center">
-		<p><?php echo $usernameErr?></p>
-		<p><?php echo $pinErr?></p>
+		<?php $validator->printErrors(); ?>
 	</div>
 </body>
 

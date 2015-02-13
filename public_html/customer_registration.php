@@ -1,5 +1,42 @@
 
 <!-- UI: Prithviraj Narahari, php code: Alexander Martens -->
+<?php
+//vars for error info
+require_once 'form_validator.php';
+require_once 'states.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST"){
+
+	$rules = array(
+		'username' => array('rule_name' => 'login_name', 'required' => true, 'pretty_name' => 'Username'),
+		'pin' => array('rule_name' => 'pin', 'required' => true, 'pretty_name' => 'PIN'),
+		'retype_pin' => array('rule_name' => 'retype_pin', 'required' => true, 'pretty_name' => 'Re-type PIN'),
+		'firstname' => array('rule_name' => 'string', 'required' => true, 'pretty_name' => 'Firstname'),
+		'lastname' => array('rule_name' => 'string', 'required' => true, 'pretty_name' => 'Lastname'),
+		'address' => array('rule_name' => 'string', 'required' => true, 'pretty_name' => 'Address'),
+		'city' => array('rule_name' => 'string', 'required' => true, 'pretty_name' => 'City'),
+		'zip' => array('rule_name' => 'zipcode', 'required' => true, 'pretty_name' => 'Zip'),
+		'state' => array('rule_name' => 'state', 'required' => true, 'pretty_name' => 'State'),
+		'credit_card' => array('rule_name' => 'credit_card_type', 'required' => true, 'pretty_name' => 'Credit Card Type'),
+		'card_number' => array('rule_name' => 'credit_card_number', 'required' => true, 'pretty_name' => 'Credit Card Number'),
+		'expiration' => array('rule_name' => 'credit_card_expiration_date', 'required' => true, 'pretty_name' => 'Credit Card Expiration Date')
+	);
+
+	$validator = new Form_Validator($rules, $_POST);
+	if ($validator->validateAndSanitizeForm()) {
+		//TODO: check DB and make sure user name isn't taken, stuff like that
+		//TODO: create/update any necessary $_SESSION vars and DB entries
+		header("Location:search.php");
+		exit();
+
+	}
+	
+	//debugging method
+	//$validator->printSanitizedValues();
+}
+
+?>
+<html>
 <head>
 <title> CUSTOMER REGISTRATION </title>
 </head>
@@ -11,7 +48,7 @@
 				Username<span style="color:red">*</span>:
 			</td>
 			<td align="left" colspan="3">
-				<input type="text" id="username" name="username" placeholder="Enter your username">
+				<input type="text" id="username" name="username" placeholder="Enter your username" value="<?php echo $validator->sanitized['username'] ?>">
 			</td>
 		</tr>
 		<tr>
@@ -33,7 +70,7 @@
 				Firstname<span style="color:red">*</span>:
 			</td>
 			<td colspan="3" align="left">
-				<input type="text" id="firstname" name="firstname" placeholder="Enter your firstname">
+				<input type="text" id="firstname" name="firstname" placeholder="Enter your firstname" value="<?php echo $validator->sanitized['firstname'] ?>">
 			</td>
 		</tr>
 		<tr>
@@ -41,7 +78,7 @@
 				Lastname<span style="color:red">*</span>:
 			</td>
 			<td colspan="3" align="left">
-				<input type="text" id="lastname" name="lastname" placeholder="Enter your lastname">
+				<input type="text" id="lastname" name="lastname" placeholder="Enter your lastname" value="<?php echo $validator->sanitized['lastname'] ?>">
 			</td>
 		</tr>
 		<tr>
@@ -49,7 +86,7 @@
 				Address<span style="color:red">*</span>:
 			</td>
 			<td colspan="3" align="left">
-				<input type="text" id="address" name="address">
+				<input type="text" id="address" name="address" value="<?php echo $validator->sanitized['address'] ?>">
 			</td>
 		</tr>
 		<tr>
@@ -57,7 +94,7 @@
 				City<span style="color:red">*</span>:
 			</td>
 			<td colspan="3" align="left">
-				<input type="text" id="city" name="city">
+				<input type="text" id="city" name="city" value="<?php echo $validator->sanitized['city'] ?>">
 			</td>
 		</tr>
 		<tr>
@@ -67,16 +104,14 @@
 			<td align="left">
 				<select id="state" name="state">
 				<option selected disabled>select a state</option>
-				<option>Michigan</option>
-				<option>California</option>
-				<option>Tennessee</option>
+				<?php States::echoSelectOptions(); //generates all of the state options ?>
 				</select>
 			</td>
 			<td align="right">
 				Zip<span style="color:red">*</span>:
 			</td>
 			<td align="left">
-				<input type="text" id="zip" name="zip">
+				<input type="text" id="zip" name="zip" value="<?php echo $validator->sanitized['zip'] ?>">
 			</td>
 		</tr>
 		<tr>
@@ -92,7 +127,7 @@
 				</select>
 			</td>
 			<td colspan="2" align="left">
-				<input type="text" id="card_number" name="card_number" placeholder="Credit card number">
+				<input type="text" id="card_number" name="card_number" placeholder="Credit card number" value="<?php echo $validator->sanitized['card_number'] ?>">
 			</td>
 		</tr>
 		<tr>
@@ -100,7 +135,7 @@
 				Expiration Date<span style="color:red">*</span>:
 			</td>
 			<td colspan="2" align="left">
-				<input type="text" id="expiration" name="expiration" placeholder="MM/YY">
+				<input type="text" id="expiration" name="expiration" placeholder="MM/YY" value="<?php echo $validator->sanitized['expiration'] ?>">
 			</td>
 		</tr>
 		<tr>
@@ -115,5 +150,20 @@
 			</form>
 		</tr>
 	</table>
+
+	<!-- keeps the user's select box values on incorrect form submission -->
+	<script>
+		var stateValue = "<?php echo $validator->sanitized['state']; ?>";
+		if (stateValue !== "")
+			document.getElementById('state').value = stateValue;
+		var creditCardTypeValue = "<?php echo $validator->sanitized['credit_card']; ?>";
+		if (creditCardTypeValue !== "")
+			document.getElementById('credit_card').value = creditCardTypeValue;
+	</script>
+	<div align="center">
+	<?php 
+		$validator->printErrors(); //show the user the problems with the form they've submitted
+	?>
+	</div>
 </body>
-</HTML>
+</html>
