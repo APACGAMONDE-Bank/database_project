@@ -10,8 +10,8 @@ CREATE TABLE customer
 	(
 		username VARCHAR(20) NOT NULL, 
 		pin INT NOT NULL, 
-		card_type VARCHAR(15), 
-		card_number INT, 
+		card_type ENUM('VISA', 'Mastercard', 'Amex', 'Discover'), 
+		card_number VARCHAR(16), 
 		card_exp_date DATE, 
 		first_name VARCHAR(20) NOT NULL, 
 		middle_name VARCHAR(20), 
@@ -19,16 +19,16 @@ CREATE TABLE customer
 		street VARCHAR(20), 
 		city VARCHAR(20), 
 		state CHAR(2), 
-		zip INT,
+		zip CHAR(5),
 		PRIMARY KEY (username)
 	);
 
 CREATE TABLE book
 	(
-		isbn INT NOT NULL,
-		title VARCHAR(50) NOT NULL,
+		isbn CHAR(13) NOT NULL,
+		title VARCHAR(100) NOT NULL,
 		price DECIMAL(6,2),
-		category VARCHAR(20),
+		category ENUM('Fiction', 'Non-Fiction'),
 		pub_date DATE,
 		pub_id INT,
 		FOREIGN KEY (pub_id) REFERENCES publisher(pub_id),
@@ -38,7 +38,7 @@ CREATE TABLE book
 CREATE TABLE publisher
 	(
 		pub_id INT NOT NULL AUTO_INCREMENT,
-		name VARCHAR(30) NOT NULL,
+		name VARCHAR(50) NOT NULL,
 		PRIMARY KEY (pub_id)
 	);
 
@@ -64,7 +64,7 @@ CREATE TABLE invoice
 
 CREATE TABLE written_by
 	(
-		isbn INT NOT NULL,
+		isbn CHAR(13) NOT NULL,
 		author_id INT NOT NULL,
 		FOREIGN KEY (isbn) REFERENCES book(isbn),
 		FOREIGN KEY (author_id) REFERENCES author(author_id),
@@ -74,7 +74,7 @@ CREATE TABLE written_by
 CREATE TABLE cart_items
 	(
 		username VARCHAR(20) NOT NULL,
-		isbn INT NOT NULL,
+		isbn CHAR(13) NOT NULL,
 		quantity INT NOT NULL,
 		FOREIGN KEY (username) REFERENCES customer(username),
 		FOREIGN KEY (isbn) REFERENCES book(isbn),
@@ -84,9 +84,9 @@ CREATE TABLE cart_items
 CREATE TABLE reviews
 	(
 		username VARCHAR(20) NOT NULL,
-		isbn INT NOT NULL,
+		isbn CHAR(13) NOT NULL,
 		comment TEXT, 
-		rating INT NOT NULL,
+		rating TINYINT NOT NULL,
 		FOREIGN KEY (username) REFERENCES customer(username),
 		FOREIGN KEY (isbn) REFERENCES book(isbn),
 		PRIMARY KEY (username, isbn)
@@ -95,8 +95,8 @@ CREATE TABLE reviews
 CREATE TABLE invoice_items
 	(
 		invoice_id INT NOT NULL,
-		isbn INT NOT NULL,
-		quantity INT NOT NULL,
+		isbn CHAR(13) NOT NULL,
+		quantity SMALLINT NOT NULL,
 		price_at_purchase DECIMAL(6,2) NOT NULL,
 		FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
 		FOREIGN KEY (isbn) REFERENCES book(isbn),
