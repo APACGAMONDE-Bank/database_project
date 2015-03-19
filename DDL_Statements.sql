@@ -51,15 +51,15 @@ CREATE TABLE author
 		PRIMARY KEY (author_id)
 	);
 
-CREATE TABLE order
+CREATE TABLE invoice
 	(
-		order_id INT NOT NULL AUTO_INCREMENT,
-		sale_datetime SMALLDATETIME,
+		invoice_id INT NOT NULL AUTO_INCREMENT,
+		sale_datetime DATETIME,
 		shipping_cost DECIMAL(6,2),
 		grand_total DECIMAL(6,2),
 		username VARCHAR(20),
 		FOREIGN KEY (username) REFERENCES customer(username),
-		PRIMARY KEY (order_id)
+		PRIMARY KEY (invoice_id)
 	);
 
 CREATE TABLE written_by
@@ -92,15 +92,15 @@ CREATE TABLE reviews
 		PRIMARY KEY (username, isbn)
 	);
 
-CREATE TABLE order_items
+CREATE TABLE invoice_items
 	(
-		order_id INT,
+		invoice_id INT,
 		isbn INT,
 		quantity INT,
 		price_at_purchase DECIMAL(6,2),
-		FOREIGN KEY (order_id) REFERENCES order(order_id),
+		FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
 		FOREIGN KEY (isbn) REFERENCES book(isbn),
-		PRIMARY KEY (order_id, isbn)
+		PRIMARY KEY (invoice_id, isbn)
 	);
 
 CREATE TABLE web_admin
