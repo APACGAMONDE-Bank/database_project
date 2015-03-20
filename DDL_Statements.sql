@@ -31,6 +31,7 @@ CREATE TABLE book
 		category ENUM('Fiction', 'Non-Fiction'),
 		pub_date DATE,
 		pub_id INT,
+		CHECK(price > 0),
 		FOREIGN KEY (pub_id) REFERENCES publisher(pub_id),
 		PRIMARY KEY (isbn)
 	);
@@ -58,6 +59,8 @@ CREATE TABLE invoice
 		shipping_cost DECIMAL(6,2) NOT NULL,
 		grand_total DECIMAL(6,2) NOT NULL,
 		username VARCHAR(20) NOT NULL,
+		CHECK(shipping_cost >= 0),
+		CHECK(grand_total >= 0),
 		FOREIGN KEY (username) REFERENCES customer(username),
 		PRIMARY KEY (invoice_id)
 	);
@@ -76,6 +79,7 @@ CREATE TABLE cart_items
 		username VARCHAR(20) NOT NULL,
 		isbn CHAR(13) NOT NULL,
 		quantity INT NOT NULL,
+		CHECK(quantity > 0),
 		FOREIGN KEY (username) REFERENCES customer(username),
 		FOREIGN KEY (isbn) REFERENCES book(isbn),
 		PRIMARY KEY (username, isbn)
@@ -87,6 +91,7 @@ CREATE TABLE reviews
 		isbn CHAR(13) NOT NULL,
 		comment TEXT, 
 		rating TINYINT NOT NULL,
+		CHECK(rating >= 1 AND rating <= 5),
 		FOREIGN KEY (username) REFERENCES customer(username),
 		FOREIGN KEY (isbn) REFERENCES book(isbn),
 		PRIMARY KEY (username, isbn)
@@ -98,6 +103,8 @@ CREATE TABLE invoice_items
 		isbn CHAR(13) NOT NULL,
 		quantity SMALLINT NOT NULL,
 		price_at_purchase DECIMAL(6,2) NOT NULL,
+		CHECK(quantity > 0),
+		CHECK(price_at_purchase >= 0),
 		FOREIGN KEY (invoice_id) REFERENCES invoice(invoice_id),
 		FOREIGN KEY (isbn) REFERENCES book(isbn),
 		PRIMARY KEY (invoice_id, isbn)
