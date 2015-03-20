@@ -94,7 +94,7 @@ CREATE TABLE reviews
 
 CREATE TABLE invoice_items
 	(
-		invoice_id INT NOT NULL,
+		invoice_id INT NOT NULL AUTO_INCREMENT,
 		isbn CHAR(13) NOT NULL,
 		quantity SMALLINT NOT NULL,
 		price_at_purchase DECIMAL(6,2) NOT NULL,
