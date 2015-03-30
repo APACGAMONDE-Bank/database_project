@@ -1,3 +1,5 @@
+SET foreign_key_checks=0;
+
 DROP TABLE IF EXISTS customer;
 DROP TABLE IF EXISTS book;
 DROP TABLE IF EXISTS publisher;
@@ -9,21 +11,19 @@ DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS invoice_items;
 DROP TABLE IF EXISTS web_admin;
 
-SET foreign_key_checks=0;
-
 CREATE TABLE customer
 	(
 		username VARCHAR(20) NOT NULL, 
 		pin INT NOT NULL, 
 		card_type ENUM('VISA', 'MASTERCARD', 'DISCOVER'), 
 		card_number VARCHAR(16), 
-		card_exp_date DATE, 
+		card_exp_month int NOT NULL,
+		card_exp_year int NOT NULL,
 		first_name VARCHAR(20) NOT NULL, 
-		middle_name VARCHAR(20), 
 		last_name VARCHAR(20) NOT NULL, 
-		street VARCHAR(20), 
+		street VARCHAR(30), 
 		city VARCHAR(20), 
-		state CHAR(2), 
+		state CHAR(20), 
 		zip CHAR(5),
 		PRIMARY KEY (username)
 	);

@@ -10,6 +10,7 @@ $DATABASE = "db201501_471_g02";
  */
 function getDatabaseConnection () {
 	try {
+		global $SERVER_NAME, $DATABASE_USERNAME, $DATABASE_PASSWORD, $DATABASE; 
 		$conn = new PDO("mysql:host=$SERVER_NAME;dbname=$DATABASE", $DATABASE_USERNAME, $DATABASE_PASSWORD);
     		// set the PDO error mode to exception
     		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

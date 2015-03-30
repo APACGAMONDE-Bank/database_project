@@ -140,7 +140,7 @@ class Form_Validator {
 	}
 
 	private function processCreditCardType($varname) {
-		if (array_search($this->raw_data[$varname], array ("MASTER", "DISCOVER", "VISA")) !== false){
+		if (array_search($this->raw_data[$varname], array ("MASTERCARD", "DISCOVER", "VISA")) !== false){
 			$this->sanitized[$varname] = $this->raw_data[$varname];
 		} else {
 			$this->errors[$varname] = "Choose a Credit Card Type";
@@ -158,5 +158,10 @@ class Form_Validator {
 			echo '<br>' . $value;
 		}
 	}
+	
+	public function addError($errorVariable, $errorMessage) {
+		$this->errors[$varname] = $errorMessage;
+	}
+	
 }
 ?>
