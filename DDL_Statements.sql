@@ -1,8 +1,13 @@
-DROP DATABASE db;
-
-CREATE DATABASE db;
-
-USE db;
+DROP TABLE IF EXISTS customer;
+DROP TABLE IF EXISTS book;
+DROP TABLE IF EXISTS publisher;
+DROP TABLE IF EXISTS author;
+DROP TABLE IF EXISTS invoice;
+DROP TABLE IF EXISTS written_by;
+DROP TABLE IF EXISTS cart_items;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS invoice_items;
+DROP TABLE IF EXISTS web_admin;
 
 SET foreign_key_checks=0;
 
@@ -10,7 +15,7 @@ CREATE TABLE customer
 	(
 		username VARCHAR(20) NOT NULL, 
 		pin INT NOT NULL, 
-		card_type ENUM('VISA', 'Mastercard', 'Amex', 'Discover'), 
+		card_type ENUM('VISA', 'MASTERCARD', 'DISCOVER'), 
 		card_number VARCHAR(16), 
 		card_exp_date DATE, 
 		first_name VARCHAR(20) NOT NULL, 
@@ -28,7 +33,7 @@ CREATE TABLE book
 		isbn CHAR(13) NOT NULL,
 		title VARCHAR(100) NOT NULL,
 		price DECIMAL(6,2),
-		category ENUM('Fiction', 'Non-Fiction'),
+		category ENUM('Fantasy', 'Adventure', 'Fiction', 'Horror'),
 		pub_date DATE,
 		pub_id INT,
 		CHECK(price > 0),
@@ -116,3 +121,5 @@ CREATE TABLE web_admin
 		password VARCHAR(32) NOT NULL,
 		PRIMARY KEY (username)
 	);
+	
+SET foreign_key_checks=1;

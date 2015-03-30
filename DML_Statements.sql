@@ -1,3 +1,5 @@
+SET foreign_key_checks=0;
+
 TRUNCATE customer;
 TRUNCATE book;
 TRUNCATE publisher;
@@ -19,7 +21,7 @@ INSERT INTO customer
 INSERT INTO book
 		(isbn, title, price, category, pub_date, pub_id)
 	VALUES
-		('9780590353427', 'Harry Potter and the Sorcerer\'s Stone', 14.99, 'Fiction', '1997-06-26', 1),
+		('9780590353427', 'Harry Potter and the Sorcerer''s Stone', 14.99, 'Fiction', '1997-06-26', 1),
 		('9780307474278', 'The Da Vinci Code', 19.95, 'Fiction', '2003-03-18', 2),
 		('9780544336261', 'The Giver', 9.99, 'Fiction', '1993-01-01', 3);
 
@@ -34,7 +36,7 @@ INSERT INTO author
 		(first_name, last_name)
 	VALUES
 		('J.K.', 'Rowling'),
-		('Dan', "Brown"),
+		('Dan', 'Brown'),
 		('Lois', 'Lowry');
 
 INSERT INTO invoice
@@ -76,3 +78,5 @@ INSERT INTO web_admin
 		(username, password)
 	VALUES
 		('admin', 'admin');
+		
+SET foreign_key_checks=1;
