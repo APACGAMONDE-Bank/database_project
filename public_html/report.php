@@ -1,5 +1,37 @@
-
 <!DOCTYPE HTML>
+<?php
+	// Databse login credentials
+	$servername = "localhost";
+	$db_username = "201501_471_02";
+	$db_password = "cade&stefano";
+	$database = "db201501_471_g02";
+
+	try {
+		$databaseConnection = new PDO("mysql:host=$servername;dbname=$database", $db_username, $db_password);
+		
+		// set the PDO error mode to exception
+		$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	}
+	catch(PDOException $e) {
+		echo "Connection failed: " . $e->getMessage();
+	}
+
+	$numberOfCustomersStatement = $databaseConnection->query("SELECT * FROM customer");
+	$numberOfCustomers = $numberOfCustomersStatement->rowCount();
+
+	$genreStatement = $databaseConnection->query("SELECT category, COUNT(*) AS genre_count FROM book GROUP BY category");
+	$genreResults = $genreStatement->fetchAll();
+
+	$bookGenre = [];
+	$bookGenreCount = [];
+
+	foreach($genreResults as $result)
+	{
+		array_push($bookGenre, $result['category']);
+		array_push($bookGenreCount, $result['genre_count']);
+	}
+
+?>
 <html>
 <head>
 <title>Reports</title>
@@ -21,7 +53,7 @@
 		</tr>
 		<tr>
 			<td>
-				Placeholder: No Customers
+				<?php echo $numberOfCustomers; ?>
 			</td>
 		</tr>
 	</table>
@@ -38,10 +70,19 @@
 		</tr>
 		<tr>
 			<td>
-				Placeholder: No Genres
+				<?php foreach($bookGenre as $genre)
+				{
+					echo "<p>" . $genre . ":\n</p>";
+				}?>
 			</td>
 			<td>
-				Placeholder: No Books
+
+				<?php 
+				echo "<p>" . $genreCount . "\n</p>";
+				foreach($bookGenreCount as $genreCount)
+				{
+					echo "<p>" . $genreCount . "\n</p>";
+				}?>
 			</td>
 		</tr>
 	</table>
