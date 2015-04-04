@@ -12,10 +12,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	$validator = new Form_Validator($rules, $_POST);
 	if ($validator->validateAndSanitizeForm()) {
-		//TODO: check DB and make sure pin matches admin login
-		//TODO: create/update any necessary $_SESSION vars and DB entries
-		header("Location:report.php");
-		exit();
+		// Databse login credentials
+		$servername = "localhost";
+		$db_username = "201501_471_02";
+		$db_password = "cade&stefano";
+		$database = "db201501_471_g02";
+
+		try {
+    		$databaseConnection = new PDO("mysql:host=$servername;dbname=$database", $db_username, $db_password);
+    		
+    		// set the PDO error mode to exception
+    		$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    	}
+		catch(PDOException $e) {
+    		echo "Connection failed: " . $e->getMessage();
+    	}
+
+    	$enteredAdminName = $_POST['adminname'];
+    	$enteredPin = $_POST['pin'];
+
+    	$loginStatement = $databaseConnection->prepare("SELECT * FROM web_admin WHERE username = :username AND password = :pin");
+
+    	$loginStatement->bindParam(':username', $enteredAdminName);
+    	$loginStatement->bindParam(':pin', $enteredPin);
+
+    	$loginStatement->execute();
+
+    	if ($loginStatement->rowCount() == 1)
+    	{
+			header("Location:report.php");
+    	}
+    	else
+    	{
+    		$validator->addError("InvalidCredentials", "Invalid Username or PIN");
+    	}
 	}
 }
 ?>
@@ -44,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				PIN<span style="color:red">*</span>:
 			</td>
 			<td align="left">
-				<input type="password" name="pin" id="pin">
+				<input type="password" name="pin" id="pin" value="<?php echo $validator->sanitized['pin']?>">
 			</td>
 			</form>
 			<form action="welcome.php" method="post" id="login_screen">
