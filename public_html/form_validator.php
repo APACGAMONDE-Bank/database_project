@@ -118,7 +118,7 @@ class Form_Validator {
 
 	private function processCreditCardNumber($varname) {
 		if (!filter_var($this->raw_data[$varname], FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^\d{16,19}$/")))) {
-			$this->errors[$varname] = "Credit Card Number must be between 13 and 19 digits long";
+			$this->errors[$varname] = "Credit Card Number must be between 16 and 19 digits long";
 		}
 		$this->sanitized[$varname] = filter_var($this->raw_data[$varname], FILTER_SANITIZE_NUMBER_INT);
 	}

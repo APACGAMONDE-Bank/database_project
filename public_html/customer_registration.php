@@ -1,5 +1,5 @@
 
-<!-- UI: Prithviraj Narahari, php code: Alexander Martens -->
+<!-- UI: Prithviraj Narahari, php and javascript code: Cade Sperlich -->
 <?php
 // vars for error info
 require_once 'header.php';
@@ -104,19 +104,20 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 			header ( "Location:search.php" );
 			exit ();
 		} catch ( PDOException $e ) {
-			// this is kind of hacky, we should be only exception we should get 
+			// this is kind of hacky, we should be only exception we should get
 			// should be an integrity constraint exception on username, so username
 			// isn't unique if we've reached this code
 			$validator->addError ( 'username', 'Username is already taken, please try another' );
-			//echo $e->getMessage (); //print this if other errors besides non-unique username are present
+			// echo $e->getMessage (); //print this if other errors besides non-unique username are present
 		}
 	}
 	
 	// debugging method
-	//$validator->printSanitizedValues ();
+	// $validator->printSanitizedValues ();
 }
 
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <title>CUSTOMER REGISTRATION</title>
@@ -210,7 +211,6 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 			</form>
 		</tr>
 	</table>
-
 	<!-- keeps the user's select box values on incorrect form submission -->
 	<script>
 		var stateValue = "<?php echo $validator->sanitized['state']; ?>";
