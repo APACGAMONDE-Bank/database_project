@@ -205,7 +205,7 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 			<td colspan="2" align="center"><input type="submit"
 				id="register_submit" name="register_submit" value="Register"></td>
 			</form>
-			<form id="no_registration" action="" method="post">
+			<form id="no_registration" action="must_register.php" method="post">
 				<td colspan="2" align="center"><input type="submit"
 					id="donotregister" name="donotregister" value="Don't Register"></td>
 			</form>
