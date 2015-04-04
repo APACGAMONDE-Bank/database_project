@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS web_admin;
 CREATE TABLE customer
 	(
 		username VARCHAR(20) NOT NULL, 
-		pin INT NOT NULL, 
+		pin VARCHAR(40) NOT NULL, 
 		card_type ENUM('VISA', 'MASTERCARD', 'DISCOVER'), 
 		card_number VARCHAR(16), 
 		card_exp_month int NOT NULL,

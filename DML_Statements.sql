@@ -14,9 +14,9 @@ TRUNCATE web_admin;
 INSERT INTO customer 
 		(username, pin, first_name, last_name)
 	VALUES 
-		('jsmith', 0000, 'John', 'Smith'),
-		('sdouglas', 1234, 'Sue', 'Douglas'),
-		('mjackson', 2323, 'Mark', 'Jackson');
+		('jsmith', '0000', 'John', 'Smith'),
+		('sdouglas', '1234', 'Sue', 'Douglas'),
+		('mjackson', '2323', 'Mark', 'Jackson');
 
 INSERT INTO book
 		(isbn, title, price, category, pub_date, pub_id)
