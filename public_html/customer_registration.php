@@ -101,7 +101,15 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 			
 			// new customer created successfully
 			$_SESSION ['username'] = $validator->sanitized ['username'];
-			header ( "Location:search.php" );
+			//came from checkout so we'll populate the new user's cart, and send them back to checkout
+			if (isset ( $_SESSION ['came_from_checkout'] )) {
+				//POPULATE USER'S DB CART FROM THEIR SESSION CART HERE!!!!!!
+				
+				unset ( $_SESSION ['came_from_checkout'] );
+				header ( "Location:confirm_order.php" );
+			} else {
+				header ( "Location:search.php" );
+			}
 			exit ();
 		} catch ( PDOException $e ) {
 			// this is kind of hacky, we should be only exception we should get

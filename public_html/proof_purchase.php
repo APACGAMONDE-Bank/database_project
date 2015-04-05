@@ -1,72 +1,146 @@
+<?php
+// vars for error info
+require_once 'header.php';
+require_once 'php_tools.php';
 
+$conn = getDatabaseConnection ();
+
+// prepare get user info and invoice info
+$getUserAndInvoiceInfoStmnt = $conn->prepare ( "SELECT first_name, last_name, street, city, state, zip, card_type, card_number, card_exp_month, card_exp_year, sale_datetime, shipping_cost, grand_total 
+											 FROM customer NATURAL JOIN invoice
+											WHERE customer.username=:username AND invoice_id=:invoice_id" );
+$getUserAndInvoiceInfoStmnt->bindParam ( ':username', $_SESSION ['username'] );
+$getUserAndInvoiceInfoStmnt->bindParam ( ':invoice_id', $_SESSION ['invoice_id'] );
+
+// execute and store result from getUserAndInvoiceInfoStmnt
+$getUserAndInvoiceInfoStmnt->execute ();
+$userAndInvoiceInfo = $getUserAndInvoiceInfoStmnt->fetch ( PDO::FETCH_ASSOC );
+
+$dateAndTime = explode ( " ", $userAndInvoiceInfo ['sale_datetime'] );
+// print_r($dateAndTime);
+
+?>
 <!DOCTYPE HTML>
 <head>
-	<title>Proof purchase</title>
-	<header align="center">Proof purchase</header> 
+<title>Proof of Purchase</title>
+<header align="center">Proof of Purchase</header>
 </head>
 <body>
-	<table align="center" style="border:2px solid blue;">
-	<form id="buy" action="" method="post">
-	<tr>
-	<td>
-	Shipping Address:
-	</td>
-	</tr>
-	<td colspan="2">
-		abc def	</td>
-	<td rowspan="3" colspan="2">
-		<b>UserID:</b>me<br />
-		<b>Date:</b>2015-01-29<br />
-		<b>Time:</b>21:32:37<br />
-		<b>Card Info:</b>VISA<br />01/19 - 1234567812345678	</td>
-	<tr>
-	<td colspan="2">
-		abc	</td>		
-	</tr>
-	<tr>
-	<td colspan="2">
-		def	</td>
-	</tr>
-	<tr>
-	<td colspan="2">
-		Michigan, 12345	</td>
-	</tr>
-	<tr>
-	<td colspan="3" align="center">
-	<div id="bookdetails" style="overflow:scroll;height:180px;width:520px;border:1px solid black;">
-	<table border='1'>
-		<th>Book Description</th><th>Qty</th><th>Price</th>
-			</table>
-	</div>
-	</td>
-	</tr>
-	<tr>
-	<td align="left" colspan="2">
-	<div id="bookdetails" style="overflow:scroll;height:180px;width:260px;border:1px solid black;background-color:LightBlue">
-	<b>Shipping Note:</b> The book will be </br>delivered within 5</br>business days.
-	</div>
-	</td>
-	<td align="right">
-	<div id="bookdetails" style="overflow:scroll;height:180px;width:260px;border:1px solid black;">
-		SubTotal:$0</br>Shipping_Handling:$0</br>_______</br>Total:$0	</div>
-	</td>
-	</tr>
-	<tr>
-		<td align="right">
-			<input type="submit" id="buyit" name="btnbuyit" value="Print" disabled>
-		</td>
+	<table align="center" style="border: 2px solid blue;">
+		<form id="buy" action="" method="post">
+			<tr>
+				<td>Shipping Address:</td>
+			</tr>
+			<td colspan="2">
+		<?php echo "{$userAndInvoiceInfo['first_name']} {$userAndInvoiceInfo['last_name']}"?>	</td>
+			<td rowspan="3" colspan="2"><b>UserID:</b><?php echo "{$_SESSION['username']}";?><br />
+				<b>Date:</b><?php echo "{$dateAndTime[0]}";?><br /> <b>Time:</b><?php echo "{$dateAndTime[1]}";?><br />
+				<b>Card Info:</b><?php echo "{$userAndInvoiceInfo['card_type']}";?><br /><?php echo "{$userAndInvoiceInfo['card_exp_month']}/{$userAndInvoiceInfo['card_exp_year']} - {$userAndInvoiceInfo['card_number']}"?></td>
+			<tr>
+				<td colspan="2">
+		<?php echo "{$userAndInvoiceInfo['street']}";?>	</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+		<?php echo "{$userAndInvoiceInfo['city']}";?>	</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+		<?php echo "{$userAndInvoiceInfo['state']} , {$userAndInvoiceInfo['zip']}";?></td>
+			</tr>
+			<tr>
+				<td colspan="3" align="center">
+					<div id="bookdetails"
+						style="overflow: scroll; height: 180px; width: 520px; border: 1px solid black;">
+						<table border='1'>
+							<th>Book Description</th>
+							<th>Qty</th>
+							<th>Price</th>
+			<?php
+			
+			// print_r($cart_items);
+			// prepare stmt for tite and price
+			// echo "{$_SESSION['invoice_id']}";
+			$getInvoiceItemsInfoStmt = $conn->prepare ( "SELECT isbn, quantity, price_at_purchase, title FROM invoice_items NATURAL JOIN book WHERE invoice_id=:invoice_id" );
+			$getInvoiceItemsInfoStmt->bindParam ( ':invoice_id', $_SESSION ['invoice_id'] );
+			$getInvoiceItemsInfoStmt->execute ();
+			$invoiceItemsInfo = $getInvoiceItemsInfoStmt->fetchAll ( PDO::FETCH_ASSOC );
+			// print_r($invoiceItemsInfo);
+			
+			// prepare stmt for authors
+			$getAuthorsInfoStmnt = $conn->prepare ( "SELECT first_name, middle_name, last_name
+								FROM book NATURAL JOIN written_by NATURAL JOIN author
+								WHERE isbn=:isbn" );
+			$getAuthorsInfoStmnt->bindParam ( ':isbn', $isbn );
+			
+			foreach ( $invoiceItemsInfo as $invoiceItem ) {
+				$isbn = $invoiceItem ['isbn'];
+				
+				echo "<tr>";
+				
+				echo '<td style="font-size:80%;">';
+				echo "{$invoiceItem['title']}";
+				
+				$getAuthorsInfoStmnt->execute ();
+				$authorNames = $getAuthorsInfoStmnt->fetchAll ( PDO::FETCH_ASSOC );
+				echo '<div style="font-size:80%">';
+				echo "<strong>By: </strong>";
+				$count = 0;
+				foreach ( $authorNames as $author ) {
+					if (++ $count != 1) {
+						echo ",<br>";
+					}
+					echo "{$author['first_name']} {$author['middle_name']} {$author['last_name']}";
+				}
+				echo "<br><strong>Price: </strong>" . $invoiceItem ['price_at_purchase'];
+				echo '</div>';
+				echo "</td>";
+				
+				$bookTimesQuantity = $invoiceItem ['price_at_purchase'] * $invoiceItem ['quantity'];
+				
+				echo "<td style='font-size:80%;text-align:center;'>{$invoiceItem['quantity']}</td>";
+				echo "<td style='font-size:60%'>\$$bookTimesQuantity</td>";
+				
+				$subtotal += $bookTimesQuantity;
+				echo "</tr>";
+			}
+			?>
+	</table>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" colspan="2">
+					<div id="bookdetails"
+						style="overflow: scroll; height: 180px; width: 260px; border: 1px solid black; background-color: LightBlue">
+						<b>Shipping Note:</b> The book will be </br>delivered within 5</br>business
+						days.
+					</div>
+				</td>
+				<td align="right">
+					<div id="bookdetails"
+						style="overflow: scroll; height: 180px; width: 260px; border: 1px solid black;">
+						SubTotal:$<?php echo $subtotal;?></br>Shipping_Handling:$<?php echo "{$userAndInvoiceInfo['shipping_cost']}";?></br>_______</br>Grand Total:$<?php echo "{$userAndInvoiceInfo['grand_total']}";?>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><input type="submit" id="buyit" name="btnbuyit"
+					value="Print" disabled></td>
+		
 		</form>
 		<td align="right">
 			<form id="update" action="search.php" method="post">
-			<input type="submit" id="update_customerprofile" name="update_customerprofile" value="New Search">
+				<input type="submit" id="update_customerprofile"
+					name="update_customerprofile" value="New Search">
 			</form>
 		</td>
 		<td align="left">
 			<form id="cancel" action="welcome.php" method="post">
-			<input type="submit" id="exit" name="exit" value="EXIT 3-B.com">
+				<input type="submit" id="exit" name="exit" value="EXIT 3-B.com">
 			</form>
 		</td>
-	</tr>
+		</tr>
 	</table>
 </body>
 </HTML>
