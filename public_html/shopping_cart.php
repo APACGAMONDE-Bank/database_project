@@ -8,10 +8,10 @@ $conn = getDatabaseConnection ();
 
 // FOR TESTING
 //$_SESSION ['username'] = 'jsmith';
-//unset ( $_SESSION ['username'] );
+
 
 // FOR TESTING
-/*
+/*unset ( $_SESSION ['username'] );
 $_SESSION ['count'] = 0;
 if ($_SERVER ["REQUEST_METHOD"] == "POST" && (isset ( $_POST ['recalculate_payment'] ) || isset ( $_POST ['recalculate'] ))) {
 	$_SESSION ['count'] ++;
@@ -21,11 +21,11 @@ if ($_SESSION ['count'] == 0) {
 	$_SESSION ['cart_items']->addToCart ( '9780073523323' );
 	$_SESSION ['cart_items']->addToCart ( '9780544336261' );
 	$_SESSION ['cart_items']->updateQuantity ( '9780544336261', 3 );
-}
+}*/
 // var_dump($_SESSION ['cart_items']);
 
 echo "count = " . $_SESSION ['count'] . "<br>";
-*/
+
 if ($_SERVER ["REQUEST_METHOD"] == "POST" && (isset ( $_POST ['recalculate_payment'] ) || isset ( $_POST ['recalculate'] ))) {
 	
 	// if username is set we'll operate on the db cart_items so we need to prepare those statements

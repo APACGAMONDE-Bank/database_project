@@ -16,7 +16,7 @@ $conn = getDatabaseConnection ();
 
 // for testing
 // unset($_SESSION['username']);
-$_SESSION ['username'] = 'jsmith';
+//$_SESSION ['username'] = 'jsmith';
 
 // if user isn't logged in, we assume they have not registered and we redirect
 // them to the user registration page. Ideally we would have an option for them
@@ -258,14 +258,14 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 			<tr>
 				<td align="left" colspan="2">
 					<div id="bookdetails"
-						style="overflow: scroll; height: 180px; width: 260px; border: 1px solid black; background-color: LightBlue">
+						style="overflow: scroll; height: 100px; width: 260px; border: 1px solid black; background-color: LightBlue">
 						<b>Shipping Note:</b> The book will be </br>delivered within 5</br>business
 						days.
 					</div>
 				</td>
 				<td align="right">
 					<div id="bookdetails"
-						style="overflow: scroll; height: 180px; width: 260px; border: 1px solid black;">
+						style="overflow: scroll; height: 100px; width: 260px; border: 1px solid black;">
 						SubTotal:$<?php echo "$subtotal";?>
 						<br>Shipping_Handling:$<?php echo "$shipping";?>
 						<br>_______<br>
@@ -285,12 +285,17 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 			</form>
 		</td>
 		<td align="left">
-			<form id="cancel" action="welcome.php" method="post">
+			<form id="cancel" action="search.php" method="post">
 				<input type="submit" id="cancel" name="cancel" value="Cancel">
 			</form>
 		</td>
 		</tr>
 	</table>
+	<div align="center" style="color: red">
+	<?php
+	$validator->printErrors (); // show the user the problems with the form they've submitted
+	?>
+	</div>
 	<script type="text/javascript">
 	var creditCardTypeValue = "<?php echo $validator->sanitized['credit_card']; ?>";
 	if (creditCardTypeValue !== "")

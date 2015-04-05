@@ -2,10 +2,10 @@
 <!-- UI: Prithviraj Narahari, php and javascript code: Cade Sperlich -->
 <?php
 // vars for error info
-require_once 'header.php';
+require_once 'php_tools.php';
 require_once 'form_validator.php';
 require_once 'states.php';
-require_once 'php_tools.php';
+require_once 'header.php';
 
 if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 	
@@ -101,10 +101,27 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 			
 			// new customer created successfully
 			$_SESSION ['username'] = $validator->sanitized ['username'];
-			//came from checkout so we'll populate the new user's cart, and send them back to checkout
+			// came from checkout so we'll populate the new user's cart, and send them back to checkout
 			if (isset ( $_SESSION ['came_from_checkout'] )) {
-				//POPULATE USER'S DB CART FROM THEIR SESSION CART HERE!!!!!!
+				// POPULATE USER'S DB CART FROM THEIR SESSION CART HERE!!!!!!
+				try {
+				$conn->beginTransaction ();
 				
+				$insertIntoCartItemsStmnt = $conn->prepare ( "INSERT INTO cart_items (username, isbn, quantity) VALUES (:username, :isbn, :quantity)" );
+				$insertIntoCartItemsStmnt->bindParam ( ':username', $_SESSION ['username'] );
+				$insertIntoCartItemsStmnt->bindParam ( ':isbn', $bookIsbn );
+				$insertIntoCartItemsStmnt->bindParam ( ':quantity', $bookQuantity );
+				
+				foreach($_SESSION['cart_items']->getCartItemsAssociativeArray() as $isbn =>$quantity){
+					$bookIsbn = $isbn;
+					$bookQuantity = $quantity;
+					$insertIntoCartItemsStmnt->execute();
+				}
+				$conn->commit();
+				} catch (PDOException $e ) {
+					$conn->rollBack();
+					$e->getMessage();
+				}
 				unset ( $_SESSION ['came_from_checkout'] );
 				header ( "Location:confirm_order.php" );
 			} else {
@@ -139,7 +156,6 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 				<td align="left" colspan="3"><input type="text" id="username"
 					name="username" placeholder="Enter your username"
 					value="<?php echo $validator->sanitized['username'] ?>"></td>
-		
 		</tr>
 		<tr>
 			<td align="right">PIN<span style="color: red">*</span>:
@@ -228,7 +244,7 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 		if (creditCardTypeValue !== "")
 			document.getElementById('credit_card').value = creditCardTypeValue;
 	</script>
-	<div align="center">
+	<div align="center" style="color: red">
 	<?php
 	$validator->printErrors (); // show the user the problems with the form they've submitted
 	?>
