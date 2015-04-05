@@ -101,7 +101,15 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 			
 			// new customer created successfully
 			$_SESSION ['username'] = $validator->sanitized ['username'];
-			header ( "Location:search.php" );
+			//came from checkout so we'll populate the new user's cart, and send them back to checkout
+			if (isset ( $_SESSION ['came_from_checkout'] )) {
+				//POPULATE USER'S DB CART FROM THEIR SESSION CART HERE!!!!!!
+				
+				unset ( $_SESSION ['came_from_checkout'] );
+				header ( "Location:confirm_order.php" );
+			} else {
+				header ( "Location:search.php" );
+			}
 			exit ();
 		} catch ( PDOException $e ) {
 			// this is kind of hacky, we should be only exception we should get
@@ -205,7 +213,7 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 			<td colspan="2" align="center"><input type="submit"
 				id="register_submit" name="register_submit" value="Register"></td>
 			</form>
-			<form id="no_registration" action="" method="post">
+			<form id="no_registration" action="must_register.php" method="post">
 				<td colspan="2" align="center"><input type="submit"
 					id="donotregister" name="donotregister" value="Don't Register"></td>
 			</form>

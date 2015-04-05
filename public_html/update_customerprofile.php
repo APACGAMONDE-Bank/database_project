@@ -5,7 +5,9 @@ require_once 'form_validator.php';
 require_once 'states.php';
 require_once 'php_tools.php';
 
-$_SESSION ['username'] = 'pizzaBob'; // FOR TESTING
+if (!isset($_SESSION['username'])){
+	$_SESSION ['username'] = 'pizzaBob'; // FOR TESTING
+}
 
 $conn = getDatabaseConnection ();
 
