@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <?php
+require_once 'header.php';
 require_once 'form_validator.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -40,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     	if ($loginStatement->rowCount() == 1)
     	{
+    		$_SESSION['username'] = $enteredUsername;
 			header("Location:search.php");
     	}
     	else
