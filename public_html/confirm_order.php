@@ -1,7 +1,7 @@
 <?php
 // vars for error info
-require_once 'header.php';
 require_once 'php_tools.php';
+require_once 'header.php';
 require_once 'form_validator.php';
 
 // DEFAULT SHIPPING
@@ -12,10 +12,7 @@ $shipping = 4;
 // get our connection
 $conn = getDatabaseConnection ();
 
-// The cart items may be used in a couple of places so we'll grab them here first
-$stmt = $conn->prepare ( "SELECT isbn, quantity FROM cart_items WHERE username = '{$_SESSION['username']}'" );
-$stmt->execute ();
-$cart_items = $stmt->fetchAll ( PDO::FETCH_ASSOC );
+
 
 // for testing
 // unset($_SESSION['username']);
@@ -31,6 +28,11 @@ if (! isset ( $_SESSION ['username'] )) {
 	header ( "Location:customer_registration.php" );
 	exit ();
 }
+
+// The cart items may be used in a couple of places so we'll grab them here first
+$stmt = $conn->prepare ( "SELECT isbn, quantity FROM cart_items WHERE username = '{$_SESSION['username']}'" );
+$stmt->execute ();
+$cart_items = $stmt->fetchAll ( PDO::FETCH_ASSOC );
 
 // user is attempting a purchase
 if ($_SERVER ["REQUEST_METHOD"] == "POST" && $_POST ['btnbuyit'] === 'BUY IT!') {

@@ -1,26 +1,31 @@
 <?php
 // vars for error info
+require_once 'php_tools.php';
 require_once 'header.php';
 require_once 'form_validator.php';
-require_once 'php_tools.php';
 
 $conn = getDatabaseConnection ();
 
 // FOR TESTING
-$_SESSION ['username'] = 'jsmith';
-// unset ( $_SESSION ['username'] );
+//$_SESSION ['username'] = 'jsmith';
+//unset ( $_SESSION ['username'] );
 
-$_SESSION ['cart_items'] = array (
-		array (
-				'isbn' => '9780307474278',
-				'quantity' => '4' 
-		),
-		array (
-				'isbn' => '9780544336261',
-				'quantity' => '5' 
-		) 
-);
+// FOR TESTING
+/*
+$_SESSION ['count'] = 0;
+if ($_SERVER ["REQUEST_METHOD"] == "POST" && (isset ( $_POST ['recalculate_payment'] ) || isset ( $_POST ['recalculate'] ))) {
+	$_SESSION ['count'] ++;
+}
+if ($_SESSION ['count'] == 0) {
+	$_SESSION ['cart_items'] = new SessionCartItems ();
+	$_SESSION ['cart_items']->addToCart ( '9780073523323' );
+	$_SESSION ['cart_items']->addToCart ( '9780544336261' );
+	$_SESSION ['cart_items']->updateQuantity ( '9780544336261', 3 );
+}
+// var_dump($_SESSION ['cart_items']);
 
+echo "count = " . $_SESSION ['count'] . "<br>";
+*/
 if ($_SERVER ["REQUEST_METHOD"] == "POST" && (isset ( $_POST ['recalculate_payment'] ) || isset ( $_POST ['recalculate'] ))) {
 	
 	// if username is set we'll operate on the db cart_items so we need to prepare those statements
@@ -46,16 +51,22 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST" && (isset ( $_POST ['recalculate_payme
 				$isbn = $key;
 				$deleteItemStmnt->execute ();
 			} else {
-				// delete from session cart_items object
+				// delete from session cart
+				echo "key = $key <br>";
+				$_SESSION ['cart_items']->removeFromCart ( $key );
+				var_dump ( $_SESSION ['cart_items']->getCartItemsAssociativeArray () );
 			}
 		} else {
 			$qtyAndIsbn = explode ( '_', $key );
 			if ($qtyAndIsbn [0] === 'qty') { // update the cart item quantity
-				if (isset ( $_SESSION ['username'] )) { // update db cart_items quantity
-					$newQuantity = $val;
-					$isbn = $qtyAndIsbn [1];
-					$updateQtyStmnt->execute ();
-				} else { // update session cart_items quantity
+				$newQuantity = $val;
+				$isbn = $qtyAndIsbn [1];
+				if ($newQuantity > 0) { // only update quantity if it's greater than 0
+					if (isset ( $_SESSION ['username'] )) { // update db cart_items quantity
+						$updateQtyStmnt->execute ();
+					} else { // update session cart_items quantity
+						$_SESSION ['cart_items']->updateQuantity ( $isbn, $newQuantity );
+					}
 				}
 			}
 		}
@@ -68,16 +79,16 @@ if (isset ( $_SESSION ['username'] )) {
 	$cart_items = $stmt->fetchAll ( PDO::FETCH_ASSOC );
 	// print_r ( $cart_items );
 } else {
-	$cart_items = $_SESSION ['cart_items'];
+	$cart_items = $_SESSION ['cart_items']->getArrayOfAssociativeArraysOfCartItems ();
 }
 
-// print_r ( $_SESSION ['cart_items'] );
+// print_r ( $cart_items);
 // echo "<br>";
 
-echo "session cart items: ";
-print_r ( $_SESSION ['cart_items'] );
-echo "<br> db cart items: ";
-print_r ( $cart_items );
+// echo "session cart items: ";
+// print_r ( $_SESSION ['cart_items'] );
+// echo "<br> db cart items: ";
+// print_r ( $cart_items );
 
 ?>
 <!DOCTYPE HTML>
