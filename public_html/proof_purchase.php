@@ -1,7 +1,7 @@
 <?php
 // vars for error info
-require_once 'header.php';
 require_once 'php_tools.php';
+require_once 'header.php';
 
 $conn = getDatabaseConnection ();
 
@@ -50,7 +50,7 @@ $dateAndTime = explode ( " ", $userAndInvoiceInfo ['sale_datetime'] );
 			</tr>
 			<tr>
 				<td colspan="3" align="center">
-					<div id="bookdetails"
+					<div id="bookdetailsmaster"
 						style="overflow: scroll; height: 180px; width: 520px; border: 1px solid black;">
 						<table border='1'>
 							<th>Book Description</th>
@@ -112,21 +112,20 @@ $dateAndTime = explode ( " ", $userAndInvoiceInfo ['sale_datetime'] );
 			<tr>
 				<td align="left" colspan="2">
 					<div id="bookdetails"
-						style="overflow: scroll; height: 180px; width: 260px; border: 1px solid black; background-color: LightBlue">
+						style="overflow: scroll; height: 100px; width: 260px; border: 1px solid black; background-color: LightBlue">
 						<b>Shipping Note:</b> The book will be </br>delivered within 5</br>business
 						days.
 					</div>
 				</td>
 				<td align="right">
 					<div id="bookdetails"
-						style="overflow: scroll; height: 180px; width: 260px; border: 1px solid black;">
+						style="overflow: scroll; height: 100px; width: 260px; border: 1px solid black;">
 						SubTotal:$<?php echo $subtotal;?></br>Shipping_Handling:$<?php echo "{$userAndInvoiceInfo['shipping_cost']}";?></br>_______</br>Grand Total:$<?php echo "{$userAndInvoiceInfo['grand_total']}";?>
 					</div>
 				</td>
 			</tr>
 			<tr>
-				<td align="right"><input type="submit" id="buyit" name="btnbuyit"
-					value="Print" disabled></td>
+				<td align="right"><button onclick="printPage()">Print</button></td>
 		
 		</form>
 		<td align="right">
@@ -142,5 +141,12 @@ $dateAndTime = explode ( " ", $userAndInvoiceInfo ['sale_datetime'] );
 		</td>
 		</tr>
 	</table>
+	<script>
+	function printPage() {
+		document.getElementById("bookdetailsmaster").style.overflow = "visible";
+		document.getElementById("bookdetailsmaster").style.height = "auto";
+   	 	window.print();
+	}
+</script>
 </body>
 </HTML>
