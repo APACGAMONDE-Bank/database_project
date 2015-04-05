@@ -16,7 +16,7 @@
 		echo "Connection failed: " . $e->getMessage();
 	}
 
-	//Number of Customers
+	// Number of Customers
 
 	$numberOfCustomersStatement = $databaseConnection->query("SELECT * FROM customer");
 	$numberOfCustomers = $numberOfCustomersStatement->rowCount();
@@ -37,7 +37,7 @@
 	}
 
 
-	//Monthly Sales
+	// Monthly Sales
 
 	$monthlySalesStatement = $databaseConnection->query("SELECT MONTHNAME(sale_datetime) AS month, SUM(grand_total) AS total_sales FROM invoice WHERE YEAR(sale_datetime) = YEAR(CURDATE()) GROUP BY MONTHNAME(sale_datetime) ORDER BY MONTH(sale_datetime)");
 	$monthlySalesResults = $monthlySalesStatement->fetchAll();
@@ -50,6 +50,21 @@
 		array_push($months, $result['month']);
 		array_push($monthlySales, $result['total_sales']);
 	}
+
+
+	// Reviews Totals
+
+	$reviewsTotalStatement = $databaseConnection->query("SELECT title, COUNT(*) AS num_reviews FROM (book NATURAL JOIN reviews) GROUP BY isbn");
+	$reviewsTotalResults = $reviewsTotalStatement->fetchAll();
+
+	$bookTitles = [];
+	$numbersOfReviews = [];
+
+	foreach ($reviewsTotalResults as $result) {
+		array_push($bookTitles, $result['title']);
+		array_push($numbersOfReviews, $result['num_reviews']);
+	}
+
 ?>
 <html>
 <head>
@@ -72,7 +87,7 @@
 		</tr>
 		<tr>
 			<td>
-				<?php echo $numberOfCustomers; ?>
+				<?php echo "<p align=\"center\">" . $numberOfCustomers . "</p>"; ?>
 			</td>
 		</tr>
 	</table>
@@ -92,7 +107,7 @@
 				<?php 
 					foreach($bookGenre as $genre)
 					{
-						echo "<p>" . $genre . ":\n</p>";
+						echo "<p align=\"right\">" . $genre . ":\n</p>";
 					}
 				?>
 			</td>
@@ -100,7 +115,7 @@
 				<?php 
 					foreach($bookGenreCount as $genreCount)
 					{
-						echo "<p>" . $genreCount . "\n</p>";
+						echo "<p align=\"center\">" . $genreCount . "\n</p>";
 					}
 				?>
 			</td>
@@ -122,7 +137,7 @@
 				<?php 
 					foreach($months as $month)
 					{
-						echo "<p>" . $month . ":\n</p>";
+						echo "<p align=\"right\">" . $month . ":\n</p>";
 					}
 				?>
 			</td>
@@ -149,10 +164,20 @@
 		</tr>
 		<tr>
 			<td>
-				Placeholder: Book Title
+				<?php 
+					foreach($bookTitles as $title)
+					{
+						echo "<p align=\"right\">" . $title . ":\n</p>";
+					}
+				?>
 			</td>
 			<td>
-				Placeholder: No Reviews
+				<?php 
+					foreach($numbersOfReviews as $reviews)
+					{
+						echo "<p align=\"center\">" . $reviews . "\n</p>";
+					}
+				?>
 			</td>
 		</tr>
 	</table>
