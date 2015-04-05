@@ -16,8 +16,13 @@
 		echo "Connection failed: " . $e->getMessage();
 	}
 
+	//Number of Customers
+
 	$numberOfCustomersStatement = $databaseConnection->query("SELECT * FROM customer");
 	$numberOfCustomers = $numberOfCustomersStatement->rowCount();
+
+
+	//Book Genre Counts
 
 	$genreStatement = $databaseConnection->query("SELECT category, COUNT(*) AS genre_count FROM book GROUP BY category");
 	$genreResults = $genreStatement->fetchAll();
@@ -31,6 +36,20 @@
 		array_push($bookGenreCount, $result['genre_count']);
 	}
 
+
+	//Monthly Sales
+
+	$monthlySalesStatement = $databaseConnection->query("SELECT MONTHNAME(sale_datetime) AS month, SUM(grand_total) AS total_sales FROM invoice WHERE YEAR(sale_datetime) = YEAR(CURDATE()) GROUP BY MONTHNAME(sale_datetime) ORDER BY MONTH(sale_datetime)");
+	$monthlySalesResults = $monthlySalesStatement->fetchAll();
+
+	$months = [];
+	$monthlySales = [];
+
+	foreach($monthlySalesResults as $result)
+	{
+		array_push($months, $result['month']);
+		array_push($monthlySales, $result['total_sales']);
+	}
 ?>
 <html>
 <head>
@@ -70,24 +89,25 @@
 		</tr>
 		<tr>
 			<td>
-				<?php foreach($bookGenre as $genre)
-				{
-					echo "<p>" . $genre . ":\n</p>";
-				}?>
+				<?php 
+					foreach($bookGenre as $genre)
+					{
+						echo "<p>" . $genre . ":\n</p>";
+					}
+				?>
 			</td>
 			<td>
-
 				<?php 
-				echo "<p>" . $genreCount . "\n</p>";
-				foreach($bookGenreCount as $genreCount)
-				{
-					echo "<p>" . $genreCount . "\n</p>";
-				}?>
+					foreach($bookGenreCount as $genreCount)
+					{
+						echo "<p>" . $genreCount . "\n</p>";
+					}
+				?>
 			</td>
 		</tr>
 	</table>
 
-	<h2>Monthly Sales for Placeholder: year</h2>
+	<h2>Monthly Sales for <?php echo date("Y") ?></h2>
 	<table>
 		<tr>
 			<th>
@@ -99,10 +119,20 @@
 		</tr>
 		<tr>
 			<td>
-				Placeholder: December
+				<?php 
+					foreach($months as $month)
+					{
+						echo "<p>" . $month . ":\n</p>";
+					}
+				?>
 			</td>
 			<td>
-				Placeholder: No Sales
+				<?php 
+					foreach($monthlySales as $sales)
+					{
+						echo "<p>$" . $sales . "\n</p>";
+					}
+				?>
 			</td>
 		</tr>
 	</table>
