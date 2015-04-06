@@ -27,7 +27,6 @@
 			$addToCartStatement->execute();
 		}
 		else {
-			echo "no username set";
 			if (! isset($_SESSION['cart_items'])) {
 				$_SESSION['cart_items'] = new SessionCartItems();
 			}
@@ -35,6 +34,7 @@
 			$sessionCart = $_SESSION['cart_items'];
 			$sessionCart->addToCart($isbn);
 		}
+		unset($_POST['isbn']);
 		echo "<script> alert('ISBN: $isbn added to your cart.'); </script>";
 	}
 
@@ -106,7 +106,6 @@
 		<td style="width: 350px" colspan="3" align="center">
 			<div id="bookdetails" style="overflow:scroll;height:180px;width:400px;border:1px solid black;background-color:LightBlue">
 			<table style="font-size:x-small;">
-			<form action="" method="POST">
 			<?php
 				$resultCount = 0;
     			if($searchStatement->execute()) {
@@ -117,6 +116,7 @@
     							print '<table>';
     								print "<tr>";
     									print "<td>";
+    										print '<form action="" method="POST">';
     											print '<input type="submit" class="button" value="Add To Cart"/>';
     											print '<input type="hidden" name="isbn" id="isbn" value="' . $row['isbn'] . '"/>';
     										print '</form>';
@@ -135,8 +135,8 @@
     						print "</td>";
     						print "<td>";
     							print "<strong>Title:</strong> " .$row['title'] . "<br>";
-    							print "<strong>By:</strong> " . $row['author_name'] . "<br>";
-    							print "<strong>Publisher:</strong> " . $row['publisher_name'] . ", " . $row['date_published'] . "<br>";
+    							print "<strong>By:</strong> " . $row['first_name'] . " " . $row['middle_name'] . " " . $row['last_name'] . "<br>";
+    							print "<strong>Publisher:</strong> " . $row['name'] . ", " . $row['pub_date'] . "<br>";
     							print "<strong>Category:</strong> " . $row['category'] . "<br>";
     							print "<strong>ISBN:</strong> " . $row['isbn'] . ", <strong>Price:</strong> $" . $row[price] . "<br>";
     						print "</td>";
