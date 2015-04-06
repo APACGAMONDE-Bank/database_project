@@ -23,12 +23,12 @@
 			}
 
 			$username = $_SESSION['username'];
-			$addToCartStatement = $databaseConnection->prepare("INSERT INTO cart_items (username, isbn, quantity) VALUES ('$username', '$isbn', 1)");
+			$addToCartStatement = $databaseConnection->prepare("INSERT IGNORE INTO cart_items (username, isbn, quantity) VALUES ('$username', '$isbn', 1)");
 			$addToCartStatement->execute();
 		}
 		else {
+			echo "no username set";
 			if (! isset($_SESSION['cart_items'])) {
-				echo "making new session cart";
 				$_SESSION['cart_items'] = new SessionCartItems();
 			}
 			
@@ -89,7 +89,9 @@
 	<table align="center" style="border:1px solid blue;">
 		<tr>
 			<td align="left">
+				
 					<h6> <fieldset>Your Shopping Cart has 0 items</fieldset> </h6>
+				
 			</td>
 			<td>
 				&nbsp
