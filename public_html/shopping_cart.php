@@ -7,7 +7,7 @@ require_once 'form_validator.php';
 $conn = getDatabaseConnection ();
 
 // FOR TESTING
-//$_SESSION ['username'] = 'jsmith';
+$_SESSION ['username'] = 'jsmith';
 
 
 // FOR TESTING

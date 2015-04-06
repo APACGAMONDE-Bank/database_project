@@ -5,7 +5,8 @@ require_once 'header.php';
 require_once 'form_validator.php';
 
 // DEFAULT SHIPPING
-$shipping = 4;
+$shippingPerBook = 2;
+$shipping = 0;
 
 // print_r ( $_POST );
 
@@ -94,7 +95,7 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST" && $_POST ['btnbuyit'] === 'BUY IT!') 
 			$createInvoiceStmnt = $conn->prepare ( "INSERT INTO invoice (sale_datetime, shipping_cost, grand_total,username)
 					VALUES (:sale_datetime, :shipping_cost, :grand_total, :username)" );
 			$createInvoiceStmnt->bindParam ( ':sale_datetime', date ( "Y-m-d H:i:s" ) );
-			$createInvoiceStmnt->bindParam ( ':shipping_cost', $shipping );
+			$createInvoiceStmnt->bindParam ( ':shipping_cost', $_POST['shipping_cost'] );
 			$createInvoiceStmnt->bindParam ( ':grand_total', $_POST ['grand_total'] );
 			$createInvoiceStmnt->bindParam ( ':username', $_SESSION ['username'] );
 			
@@ -240,6 +241,9 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 								
 								$bookTimesQuantity = $titleAndPrice ['price'] * $row ['quantity'];
 								
+								//update shipping
+								$shipping += ($row['quantity'] * $shippingPerBook);
+								
 								echo "<td style='font-size:80%;text-align:center;'>{$row['quantity']}</td>";
 								echo "<td style='font-size:60%'>\$$bookTimesQuantity</td>";
 								
@@ -276,7 +280,7 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 			<tr>
 				<td align="right"><input type="submit" id="buyit" name="btnbuyit"
 					value="BUY IT!"></td>
-		
+		<input type="hidden" name="shipping_cost" value="<?php echo $shipping?>" />
 		</form>
 		<td align="right">
 			<form id="update" action="update_customerprofile.php" method="post">

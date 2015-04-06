@@ -140,17 +140,21 @@ $invoices = array (
 $conn = getDatabaseConnection();
 
 //all invoices will have a shiping cost of $4 dollars
-$shipping_cost = 4;
+$shippingPerBook = 2;
 
 //prepare get book price statement
 $getBookPriceStmnt = $conn->prepare("SELECT price FROM book WHERE isbn=:isbn");
 $getBookPriceStmnt->bindParam(':isbn', $isbn);
 
 //prepare insert into invoice statement minus the grand total, which we'll get after inserting the books into invoice items
-$insertIntoInvoiceStmnt = $conn->prepare("INSERT INTO invoice (sale_datetime, shipping_cost, username) VALUES (:sale_datetime, :shipping_cost, :username)");
+$insertIntoInvoiceStmnt = $conn->prepare("INSERT INTO invoice (sale_datetime, username) VALUES (:sale_datetime, :username)");
 $insertIntoInvoiceStmnt->bindParam(':sale_datetime', $sale_datetime);
-$insertIntoInvoiceStmnt->bindParam(':shipping_cost', $shipping_cost);
 $insertIntoInvoiceStmnt->bindParam(':username', $username);
+
+//update invoice shipping cost statement
+$updateInvoiceShippingCost = $conn->prepare("UPDATE invoice SET shipping_cost=:shipping_cost WHERE invoice_id=:invoice_id");
+$updateInvoiceShippingCost->bindParam(":shipping_cost", $shipping_cost);
+$updateInvoiceShippingCost->bindParam(":invoice_id", $invoice_id);
 
 //prepare insert into invoice items statement
 $insertIntoInvoiceItemsStmnt = $conn->prepare("INSERT INTO invoice_items (invoice_id, isbn, quantity, price_at_purchase) VALUES (:invoice_id, :isbn, :quantity, :price_at_purchase)");
@@ -182,6 +186,9 @@ try {
 		//variable for subtotal
 		$subtotal = 0;
 		
+		//variable for shipping
+		$shipping_cost = 0;
+		
 		//insert all books into invoices and sum a subtotal
 		foreach($invoice['books'] as $book) {
 			//get books price
@@ -193,16 +200,22 @@ try {
 			//insert into invoice_items
 			$quantity = $book['quantity'];
 			$insertIntoInvoiceItemsStmnt->execute();
-
+			
 			//update subtotal
 			$subtotal += ($quantity * $price_at_purchase);
+			
+			//update shipping total
+			$shipping_cost += ($quantity * $shippingPerBook);
 		}
 		
 		//calculate grand total
 		$grand_total = $subtotal + $shipping_cost;
 		
 		//update invoice grand total
-		$updateInvoiceGrandTotalStmnt->execute();	
+		$updateInvoiceGrandTotalStmnt->execute();
+
+		//update invoice shipping
+		$updateInvoiceShippingCost->execute();
 	}
 	$conn->commit();
 } catch (PDOException $e) {
