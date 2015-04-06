@@ -1,5 +1,4 @@
-
-<!-- Figure 2: Search Screen by Alexander -->
+<?php require_once 'form_validator.php';?>
 <html>
 <head>
 	<title>SEARCH - 3-B.com</title>
@@ -8,8 +7,8 @@
 	<table align="center" style="border:1px solid blue;">
 		<tr>
 			<td>Search for: </td>
-			<form action="search_result.php" method="get">
-				<td><input name="searchfor" /></td>
+			<form action="search_result.php" method="get" id="search_screen">
+				<td><input name="searchfor" type="text" id="searchfor" value="<?php echo $validator->sanitized['string']?>"></td>
 				<td><input type="submit"/></td>
 		</tr>
 		<tr>

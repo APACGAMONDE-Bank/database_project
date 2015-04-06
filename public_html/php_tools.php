@@ -27,7 +27,11 @@ class SessionCartItems {
 		$this->cartItems = array ();
 	}
 	public function addToCart($isbn) {
-		if (! isset ( $cartItems [$isbn] )) {
+		if (isset ( $cartItems [$isbn] )) {
+			$this->cartItems [$isbn]++;
+		}
+		else
+		{
 			$this->cartItems [$isbn] = 1;
 		}
 	}
