@@ -54,7 +54,7 @@
 		if ($searchAttribute == "author")
 		{
 			if($searchCategory === 'all'){ //category is unspecified
-			$searchStatement = $databaseConnection->prepare("SSELECT DISTINCT(isbn), title, name, pub_date, category, price FROM $searchTable WHERE $searchAuthorNameFields");
+			$searchStatement = $databaseConnection->prepare("SELECT DISTINCT(isbn), title, name, pub_date, category, price FROM $searchTable WHERE $searchAuthorNameFields");
 			} 
 			else { //category is specified
 				$searchStatement = $databaseConnection->prepare("SELECT DISTINCT(isbn), title, name, pub_date, category, price FROM $searchTable WHERE category = '$searchCategory' AND ($searchAuthorNameFields)");
