@@ -44,12 +44,12 @@
 
 	// Database Connection
 	$servername = "localhost";
-	$username = "201501_471_02";
+	$db_username = "201501_471_02";
 	$password = "cade&stefano";
 	$database = "db201501_471_g02";
 
 	try {
-		$databaseConnection = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+		$databaseConnection = new PDO("mysql:host=$servername;dbname=$database", $db_username, $password);
 		
 		// set the PDO error mode to exception
 		$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -90,7 +90,6 @@
 			}
 		}
 	}
-
 ?>
 <html>
 <head>
@@ -149,7 +148,7 @@
     							print "<strong>By:</strong> " . $row['first_name'] . " " . $row['middle_name'] . " " . $row['last_name'] . "<br>";
     							print "<strong>Publisher:</strong> " . $row['name'] . ", " . $row['pub_date'] . "<br>";
     							print "<strong>Category:</strong> " . $row['category'] . "<br>";
-    							print "<strong>ISBN:</strong> " . $row['isbn'] . ", <strong>Price:</strong> $" . $row[price] . "<br>";
+    							print "<strong>ISBN:</strong> " . $row['isbn'] . ", <strong>Price:</strong> $" . $row['price'] . "<br>";
     						print "</td>";
     					print "</tr>";
     					//print_r($row['category']);
