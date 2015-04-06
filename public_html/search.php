@@ -18,7 +18,7 @@
 						<option value="anywhere" selected='selected'>Keyword anywhere</option>
 						<option value="title">Title</option>
 						<option value="author">Author</option>
-						<option value="publisher">Publisher</option>
+						<option value="name">Publisher</option>
 						<option value="isbn">ISBN</option>				
 					</select>
 				</td>
