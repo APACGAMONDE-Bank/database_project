@@ -156,14 +156,14 @@ $numberOfDistinctItemsInCart = sizeof ( $cart_items );
 									}
 									echo "{$author['first_name']} {$author['middle_name']} {$author['last_name']}";
 								}
-								echo "<br><strong>Price: </strong>" . $titleAndPrice ['price'];
+								echo "<br><strong>Price: </strong>$" . number_format($titleAndPrice['price'], 2);
 								echo '</div>';
 								echo "</td>";
 								
 								$bookTimesQuantity = $titleAndPrice ['price'] * $row ['quantity'];
 								
 								echo "<td><input type='text' size='2' name='qty_$isbn' id='$isbn;_qty' value='{$row['quantity']}'></input></td>";
-								echo "<td style='font-size:60%'>\$$bookTimesQuantity</td>";
+								echo "<td style='font-size:60%'>\$" . number_format($bookTimesQuantity, 2). "</td>";
 								
 								$subtotal += $bookTimesQuantity;
 							}

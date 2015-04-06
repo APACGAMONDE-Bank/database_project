@@ -158,7 +158,7 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 ?>
 <!DOCTYPE HTML>
 <head>
-<title>CONFIRM ORDER</title>
+<title>Confirm Order</title>
 <header align="center">Confirm Order</header>
 </head>
 <body>
