@@ -22,6 +22,7 @@
 	$reviews = $reviewStatement->fetchAll(PDO::FETCH_ASSOC);
 	$bookDetails = $bookDetailsStatement->fetch(PDO::FETCH_ASSOC);
 	$bookTitle = $bookDetails['title'];
+	unset($_GET['isbn']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,13 +53,13 @@
 			<table>
 			<?php 
 				foreach ($reviews as $review) {
-					print "<tr><p>Username: ";
+					print "<tr><p><b>User</b>: ";
 					print $review['username'];
 					print "</p></tr>";
-					print "<tr><p>Comment: ";
+					print "<tr><p><b>Comment</b>: ";
 					print $review['comment'];
 					print "</p></tr>";
-					print "<tr><p>Rating: ";
+					print "<tr><p><b>Rating</b>: ";
 					print $review['rating'];
 					print "/5</p></tr><hr>";
 				}
@@ -69,9 +70,7 @@
 		</tr>
 		<tr>
 			<td colspan="2" align="center">
-				<form action="search_result.php" method="post">
-					<input type="submit" value="Done">
-				</form>
+					<button type="submit" onclick="history.go(-1);return true;">Return to Search</button>
 			</td>
 		</tr>
 	</table>
