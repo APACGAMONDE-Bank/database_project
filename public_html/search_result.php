@@ -72,11 +72,22 @@
 		}
 	} 
 	else { //seach attribute is specified
-		if($searchCategory === 'all'){ //category is unspecified
-			$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE $searchAttribute LIKE '%$searchTerm%'");
-		} 
-		else { //category is specified
-			$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE category = '$searchCategory' AND $searchAttribute LIKE '%$searchTerm%'");
+		if ($searchAttribute == "author")
+		{
+			if($searchCategory === 'all'){ //category is unspecified
+			$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE first_name LIKE '%$searchTerm%' OR middle_name LIKE '%$searchTerm%' OR last_name LIKE '%$searchTerm%'");
+			} 
+			else { //category is specified
+				$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE category = '$searchCategory' AND (first_name LIKE '%$searchTerm%' OR middle_name LIKE '%$searchTerm%' OR last_name LIKE '%$searchTerm%')");
+			}
+		}
+		else {
+			if($searchCategory === 'all'){ //category is unspecified
+				$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE $searchAttribute LIKE '%$searchTerm%'");
+			} 
+			else { //category is specified
+				$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE category = '$searchCategory' AND $searchAttribute LIKE '%$searchTerm%'");
+			}
 		}
 	}
 
