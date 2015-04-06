@@ -7,28 +7,12 @@ require_once 'form_validator.php';
 $conn = getDatabaseConnection ();
 
 // FOR TESTING
-//$_SESSION ['username'] = 'jsmith';
-
+// $_SESSION ['username'] = 'jsmith';
 
 // FOR TESTING
 /*
-unset ( $_SESSION ['username'] );
-$_SESSION ['count'] = 0;
-if ($_SERVER ["REQUEST_METHOD"] == "POST" && (isset ( $_POST ['recalculate_payment'] ) || isset ( $_POST ['recalculate'] ))) {
-	$_SESSION ['count'] ++;
-}
-if ($_SESSION ['count'] == 0) {
-	$_SESSION ['cart_items'] = new SessionCartItems ();
-	$_SESSION ['cart_items']->addToCart ( '9780073523323' );
-	$_SESSION ['cart_items']->addToCart ( '9780544336261' );
-	$_SESSION ['cart_items']->addToCart ( '9780307474278' );
-	$_SESSION ['cart_items']->addToCart ( '9780590353427' );
-	$_SESSION ['cart_items']->updateQuantity ( '9780544336261', 3 );
-}
-// var_dump($_SESSION ['cart_items']);
-
-echo "count = " . $_SESSION ['count'] . "<br>";
-*/
+ * unset ( $_SESSION ['username'] ); $_SESSION ['count'] = 0; if ($_SERVER ["REQUEST_METHOD"] == "POST" && (isset ( $_POST ['recalculate_payment'] ) || isset ( $_POST ['recalculate'] ))) { $_SESSION ['count'] ++; } if ($_SESSION ['count'] == 0) { $_SESSION ['cart_items'] = new SessionCartItems (); $_SESSION ['cart_items']->addToCart ( '9780073523323' ); $_SESSION ['cart_items']->addToCart ( '9780544336261' ); $_SESSION ['cart_items']->addToCart ( '9780307474278' ); $_SESSION ['cart_items']->addToCart ( '9780590353427' ); $_SESSION ['cart_items']->updateQuantity ( '9780544336261', 3 ); } // var_dump($_SESSION ['cart_items']); echo "count = " . $_SESSION ['count'] . "<br>";
+ */
 if ($_SERVER ["REQUEST_METHOD"] == "POST" && (isset ( $_POST ['recalculate_payment'] ) || isset ( $_POST ['recalculate'] ))) {
 	
 	// if username is set we'll operate on the db cart_items so we need to prepare those statements
@@ -55,9 +39,9 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST" && (isset ( $_POST ['recalculate_payme
 				$deleteItemStmnt->execute ();
 			} else {
 				// delete from session cart
-				echo "key = $key <br>";
+				//echo "key = $key <br>";
 				$_SESSION ['cart_items']->removeFromCart ( $key );
-				var_dump ( $_SESSION ['cart_items']->getCartItemsAssociativeArray () );
+				//var_dump ( $_SESSION ['cart_items']->getCartItemsAssociativeArray () );
 			}
 		} else {
 			$qtyAndIsbn = explode ( '_', $key );
@@ -82,11 +66,13 @@ if (isset ( $_SESSION ['username'] )) {
 	$cart_items = $stmt->fetchAll ( PDO::FETCH_ASSOC );
 	// print_r ( $cart_items );
 } else {
-	$cart_items = $_SESSION ['cart_items']->getArrayOfAssociativeArraysOfCartItems ();
+	if (isset ( $_SESSION ['cart_items'] )) {
+		$cart_items = $_SESSION ['cart_items']->getArrayOfAssociativeArraysOfCartItems ();
+	}
 }
 
-//following variable for disabling proceed to Checkout button if there are no items in the cart
-$numberOfDistinctItemsInCart = sizeof($cart_items);
+// following variable for disabling proceed to Checkout button if there are no items in the cart
+$numberOfDistinctItemsInCart = sizeof ( $cart_items );
 
 // print_r ( $cart_items);
 // echo "<br>";
@@ -107,7 +93,8 @@ $numberOfDistinctItemsInCart = sizeof($cart_items);
 			<td align="center">
 				<form id="checkout" action="confirm_order.php" method="get">
 					<input type="submit" name="checkout_submit" id="checkout_submit"
-						value="Proceed to Checkout" <?php if ($numberOfDistinctItemsInCart === 0) echo "disabled";?>>
+						value="Proceed to Checkout"
+						<?php if ($numberOfDistinctItemsInCart === 0) echo "disabled";?>>
 				</form>
 			</td>
 			<td align="center">
@@ -136,57 +123,57 @@ $numberOfDistinctItemsInCart = sizeof($cart_items);
 							<th width="10%">Price</th>
 							<!-- PUT CART ITEM ROWS HERE -->
 						<?php
-						
-						// prepare stmt for tite and price
-						$titleAndPriceStmt = $conn->prepare ( "SELECT title, price FROM book WHERE isbn=:isbn" );
-						$titleAndPriceStmt->bindParam ( ':isbn', $isbn );
-						
-						// prepare stmt for authors
-						$authorsStmnt = $conn->prepare ( "SELECT first_name, middle_name, last_name
+						if (isset ( $_SESSION ['cart_items'] ) || isset ( $_SESSION ['username'] )) {
+							// prepare stmt for tite and price
+							$titleAndPriceStmt = $conn->prepare ( "SELECT title, price FROM book WHERE isbn=:isbn" );
+							$titleAndPriceStmt->bindParam ( ':isbn', $isbn );
+							
+							// prepare stmt for authors
+							$authorsStmnt = $conn->prepare ( "SELECT first_name, middle_name, last_name
 								FROM book NATURAL JOIN written_by NATURAL JOIN author
 								WHERE isbn=:isbn" );
-						$authorsStmnt->bindParam ( ':isbn', $isbn );
-						
-						foreach ( $cart_items as $row ) {
-							$isbn = $row ['isbn'];
+							$authorsStmnt->bindParam ( ':isbn', $isbn );
 							
-							$titleAndPriceStmt->execute ();
-							$titleAndPrice = $titleAndPriceStmt->fetch ( PDO::FETCH_ASSOC );
-							echo "<input type='hidden' name='recalculate' value='recalculate'></input>";
-							echo "<tr><td><input type='submit' name='$isbn' value='Delete'></input></td>";
-							
-							echo '<td style="font-size:80%;">';
-							echo "{$titleAndPrice['title']}";
-							
-							$authorsStmnt->execute ();
-							$authorNames = $authorsStmnt->fetchAll ( PDO::FETCH_ASSOC );
-							echo '<div style="font-size:80%">';
-							echo "<strong>By: </strong>";
-							$count = 0;
-							foreach ( $authorNames as $author ) {
-								if (++ $count != 1) {
-									echo ",<br>";
+							foreach ( $cart_items as $row ) {
+								$isbn = $row ['isbn'];
+								
+								$titleAndPriceStmt->execute ();
+								$titleAndPrice = $titleAndPriceStmt->fetch ( PDO::FETCH_ASSOC );
+								echo "<input type='hidden' name='recalculate' value='recalculate'></input>";
+								echo "<tr><td><input type='submit' name='$isbn' value='Delete'></input></td>";
+								
+								echo '<td style="font-size:80%;">';
+								echo "{$titleAndPrice['title']}";
+								
+								$authorsStmnt->execute ();
+								$authorNames = $authorsStmnt->fetchAll ( PDO::FETCH_ASSOC );
+								echo '<div style="font-size:80%">';
+								echo "<strong>By: </strong>";
+								$count = 0;
+								foreach ( $authorNames as $author ) {
+									if (++ $count != 1) {
+										echo ",<br>";
+									}
+									echo "{$author['first_name']} {$author['middle_name']} {$author['last_name']}";
 								}
-								echo "{$author['first_name']} {$author['middle_name']} {$author['last_name']}";
+								echo "<br><strong>Price: </strong>" . $titleAndPrice ['price'];
+								echo '</div>';
+								echo "</td>";
+								
+								$bookTimesQuantity = $titleAndPrice ['price'] * $row ['quantity'];
+								
+								echo "<td><input type='text' size='2' name='qty_$isbn' id='$isbn;_qty' value='{$row['quantity']}'></input></td>";
+								echo "<td style='font-size:60%'>\$$bookTimesQuantity</td>";
+								
+								$subtotal += $bookTimesQuantity;
 							}
-							echo "<br><strong>Price: </strong>" . $titleAndPrice ['price'];
-							echo '</div>';
-							echo "</td>";
 							
-							$bookTimesQuantity = $titleAndPrice ['price'] * $row ['quantity'];
-							
-							echo "<td><input type='text' size='2' name='qty_$isbn' id='$isbn;_qty' value='{$row['quantity']}'></input></td>";
-							echo "<td style='font-size:60%'>\$$bookTimesQuantity</td>";
-							
-							$subtotal += $bookTimesQuantity;
+							echo "</tr>";
 						}
-						
-						echo "</tr>";
-						
 						?>
 						</table>
-						<?php 
-						if ($numberOfDistinctItemsInCart === 0) 
+						<?php
+						if ($numberOfDistinctItemsInCart === 0)
 							echo "There are no items in your cart";
 						?>
 					</div>
