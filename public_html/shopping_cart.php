@@ -85,6 +85,9 @@ if (isset ( $_SESSION ['username'] )) {
 	$cart_items = $_SESSION ['cart_items']->getArrayOfAssociativeArraysOfCartItems ();
 }
 
+//following variable for disabling proceed to Checkout button if there are no items in the cart
+$numberOfDistinctItemsInCart = sizeof($cart_items);
+
 // print_r ( $cart_items);
 // echo "<br>";
 
@@ -97,12 +100,6 @@ if (isset ( $_SESSION ['username'] )) {
 <!DOCTYPE HTML>
 <head>
 <title>Shopping Cart</title>
-<script>
-	//remove from cart
-	function del(isbn){
-		window.location.href="shopping_cart.php?delIsbn="+ isbn;
-	}
-	</script>
 </head>
 <body>
 	<table align="center" style="border: 2px solid blue;">
@@ -110,7 +107,7 @@ if (isset ( $_SESSION ['username'] )) {
 			<td align="center">
 				<form id="checkout" action="confirm_order.php" method="get">
 					<input type="submit" name="checkout_submit" id="checkout_submit"
-						value="Proceed to Checkout">
+						value="Proceed to Checkout" <?php if ($numberOfDistinctItemsInCart === 0) echo "disabled";?>>
 				</form>
 			</td>
 			<td align="center">
@@ -188,6 +185,10 @@ if (isset ( $_SESSION ['username'] )) {
 						
 						?>
 						</table>
+						<?php 
+						if ($numberOfDistinctItemsInCart === 0) 
+							echo "There are no items in your cart";
+						?>
 					</div>
 				</td>
 		
