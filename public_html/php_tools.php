@@ -70,6 +70,10 @@ function getNumberOfCartItems() {
 			$getCartItemsStmnt = $conn->prepare("SELECT SUM(quantity) FROM cart_items WHERE username='{$_SESSION['username']}'");
 			$getCartItemsStmnt->execute();
 			$numberOfItems = $getCartItemsStmnt->fetchColumn();
+			if (is_null($numberOfItems))
+			{
+				$numberOfItems = 0;
+			}
 		} catch (PDOException $e) {
 			echo $e->getMessage();
 		}
