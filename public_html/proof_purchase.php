@@ -33,9 +33,9 @@ $dateAndTime = explode ( " ", $userAndInvoiceInfo ['sale_datetime'] );
 			</tr>
 			<td colspan="2">
 		<?php echo "{$userAndInvoiceInfo['first_name']} {$userAndInvoiceInfo['last_name']}"?>	</td>
-			<td rowspan="3" colspan="2"><b>UserID:</b><?php echo "{$_SESSION['username']}";?><br />
-				<b>Date:</b><?php echo "{$dateAndTime[0]}";?><br /> <b>Time:</b><?php echo "{$dateAndTime[1]}";?><br />
-				<b>Card Info:</b><?php echo "{$userAndInvoiceInfo['card_type']}";?><br /><?php echo "{$userAndInvoiceInfo['card_exp_month']}/{$userAndInvoiceInfo['card_exp_year']} - {$userAndInvoiceInfo['card_number']}"?></td>
+			<td rowspan="3" colspan="2"><b>UserID: </b><?php echo "{$_SESSION['username']}";?><br />
+				<b>Date: </b><?php echo "{$dateAndTime[0]}";?><br /> <b>Time: </b><?php echo "{$dateAndTime[1]}";?><br />
+				<b>Card Info: </b><?php echo "{$userAndInvoiceInfo['card_type']}";?><br /><?php echo "{$userAndInvoiceInfo['card_exp_month']}/{$userAndInvoiceInfo['card_exp_year']} - {$userAndInvoiceInfo['card_number']}"?></td>
 			<tr>
 				<td colspan="2">
 		<?php echo "{$userAndInvoiceInfo['street']}";?>	</td>
@@ -92,14 +92,14 @@ $dateAndTime = explode ( " ", $userAndInvoiceInfo ['sale_datetime'] );
 					}
 					echo "{$author['first_name']} {$author['middle_name']} {$author['last_name']}";
 				}
-				echo "<br><strong>Price: </strong>" . $invoiceItem ['price_at_purchase'];
+				echo "<br><strong>Price: </strong>$" . number_format($invoiceItem['price_at_purchase'], 2);
 				echo '</div>';
 				echo "</td>";
 				
 				$bookTimesQuantity = $invoiceItem ['price_at_purchase'] * $invoiceItem ['quantity'];
 				
 				echo "<td style='font-size:80%;text-align:center;'>{$invoiceItem['quantity']}</td>";
-				echo "<td style='font-size:60%'>\$$bookTimesQuantity</td>";
+				echo "<td style='font-size:60%'>\$" . number_format($bookTimesQuantity, 2) . "</td>";
 				
 				$subtotal += $bookTimesQuantity;
 				echo "</tr>";
@@ -120,7 +120,9 @@ $dateAndTime = explode ( " ", $userAndInvoiceInfo ['sale_datetime'] );
 				<td align="right">
 					<div id="bookdetails"
 						style="overflow: scroll; height: 100px; width: 260px; border: 1px solid black;">
-						SubTotal:$<?php echo $subtotal;?></br>Shipping_Handling:$<?php echo "{$userAndInvoiceInfo['shipping_cost']}";?></br>_______</br>Grand Total:$<?php echo "{$userAndInvoiceInfo['grand_total']}";?>
+						Subtotal: $<?php echo number_format($subtotal, 2);?></br>
+						Shipping and Handling: $<?php echo number_format($userAndInvoiceInfo['shipping_cost'], 2);?></br>_______</br>
+						Grand Total: $<?php echo number_format($userAndInvoiceInfo['grand_total'], 2);?>
 					</div>
 				</td>
 			</tr>
