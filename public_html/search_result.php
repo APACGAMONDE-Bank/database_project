@@ -44,31 +44,35 @@
 	
 	if ($searchAttribute === 'anywhere'){ //search term can match publisher, author, isbn, or title
 		if($searchCategory === 'all'){ //category is unspecified
-			$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE isbn LIKE '%$searchTerm%' OR title LIKE '%$searchTerm%' OR $searchAuthorNameFields OR name LIKE '%$searchTerm%'");
+			$searchStatement = $databaseConnection->prepare("SELECT DISTINCT(isbn), title, name, pub_date, category, price FROM $searchTable WHERE isbn LIKE '%$searchTerm%' OR title LIKE '%$searchTerm%' OR $searchAuthorNameFields OR name LIKE '%$searchTerm%'");
 		} 
 		else { //category is specified
-			$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE category = '$searchCategory' AND (isbn LIKE '%$searchTerm%' OR title LIKE '%$searchTerm%' OR $searchAuthorNameFields OR name LIKE '%$searchTerm%')");
+			$searchStatement = $databaseConnection->prepare("SELECT DISTINCT(isbn), title, name, pub_date, category, price FROM $searchTable WHERE category = '$searchCategory' AND (isbn LIKE '%$searchTerm%' OR title LIKE '%$searchTerm%' OR $searchAuthorNameFields OR name LIKE '%$searchTerm%')");
 		}
 	} 
 	else { //seach attribute is specified
 		if ($searchAttribute == "author")
 		{
 			if($searchCategory === 'all'){ //category is unspecified
-			$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE $searchAuthorNameFields");
+			$searchStatement = $databaseConnection->prepare("SSELECT DISTINCT(isbn), title, name, pub_date, category, price FROM $searchTable WHERE $searchAuthorNameFields");
 			} 
 			else { //category is specified
-				$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE category = '$searchCategory' AND ($searchAuthorNameFields)");
+				$searchStatement = $databaseConnection->prepare("SELECT DISTINCT(isbn), title, name, pub_date, category, price FROM $searchTable WHERE category = '$searchCategory' AND ($searchAuthorNameFields)");
 			}
 		}
 		else {
 			if($searchCategory === 'all'){ //category is unspecified
-				$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE $searchAttribute LIKE '%$searchTerm%'");
+				$searchStatement = $databaseConnection->prepare("SELECT DISTINCT(isbn), title, name, pub_date, category, price FROM $searchTable WHERE $searchAttribute LIKE '%$searchTerm%'");
 			} 
 			else { //category is specified
-				$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE category = '$searchCategory' AND $searchAttribute LIKE '%$searchTerm%'");
+				$searchStatement = $databaseConnection->prepare("SELECT DISTINCT(isbn), title, name, pub_date, category, price FROM $searchTable WHERE category = '$searchCategory' AND $searchAttribute LIKE '%$searchTerm%'");
 			}
 		}
 	}
+	
+	//prepare statment to get authors
+	$getAuthorsStmnt = $databaseConnection->prepare("SELECT first_name, last_name FROM written_by NATURAL JOIN author WHERE isbn=:isbn");
+	$getAuthorsStmnt->bindParam(":isbn", $isbn);
 ?>
 <html>
 <head>
@@ -113,8 +117,20 @@
     						print "</td>";
     						print '<td style="padding:0px">';
     							print "<strong>Title:</strong> " .$row['title'] . "<br>";
-    							print "<strong>By:</strong> " . $row['first_name'] . " " . $row['middle_name'] . " " . $row['last_name'] . "<br>";
-    							print "<strong>Publisher:</strong> " . $row['name'] . ", " . $row['pub_date'] . "<br>";
+    							
+    							//print author information
+    							print "<strong>By:</strong> ";
+    							$isbn = $row['isbn'];
+    							$getAuthorsStmnt->execute();
+    							$authors = $getAuthorsStmnt->fetchAll(PDO::FETCH_ASSOC);
+    							for ($i = 0; $i < sizeof($authors); $i++) {
+								if ($i !== 0) {
+									print ", ";
+								}
+								print $authors[$i]['first_name'] . " " . $authors[$i]['last_name'];
+							}
+    							
+    							print "<br><strong>Publisher:</strong> " . $row['name'] . ", " . $row['pub_date'] . "<br>";
     							print "<strong>Category:</strong> " . $row['category'] . "<br>";
     							print "<strong>ISBN:</strong> " . $row['isbn'] . ", <strong>Price:</strong> $" . $row['price'] . "<br>";
     						print "</td>";
