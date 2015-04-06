@@ -4,6 +4,13 @@ if ($_POST['submit']){
 	header('Location:'.$_POST['group1']);
 }
 ?>
+
+<?php 
+//if a user has gotten to the welcome page via an exit button, let's log them out
+if (isset($_POST['exit'])){
+	unset($_SESSION['username']);
+}
+?>
 <html>
 <title>Welcome to Best Book Buy Online Bookstore!</title>
 <body>
