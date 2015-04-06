@@ -177,7 +177,7 @@
 			</td>
 			<td align="center">
 				<form action="welcome.php" method="post">
-					<input type="submit" name="exit" value="EXIT 3-B.com">
+					<input type="submit" name="exit" value="EXIT 3-B.com<?php unset($_SESSION['username']); ?>">
 				</form>
 			</td>
 		</tr>

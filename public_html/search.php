@@ -31,7 +31,7 @@
 						<option value='Fantasy'>Fantasy</option><option value='Adventure'>Adventure</option><option value='Fiction'>Fiction</option><option value='Horror'>Horror</option></select></td>
 				</form>
 	<form action="welcome.php" method="post">	
-				<td><input type="submit" name="exit" value="EXIT 3-B.com" /></td>
+				<td><input type="submit" name="exit" value="EXIT 3-B.com<?php unset($_SESSION['username']); ?>" /></td>
 			</form>
 		</tr>
 	</table>
