@@ -1,5 +1,28 @@
+<?php
+	// Databse login credentials
+	$servername = "localhost";
+	$db_username = "201501_471_02";
+	$db_password = "cade&stefano";
+	$database = "db201501_471_g02";
 
-<!-- screen 4: Book Reviews by Prithviraj Narahari, php coding: Alexander Martens-->
+	try {
+		$databaseConnection = new PDO("mysql:host=$servername;dbname=$database", $db_username, $db_password);
+		
+		// set the PDO error mode to exception
+		$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	}
+	catch(PDOException $e) {
+		echo "Connection failed: " . $e->getMessage();
+	}
+
+	$isbn = $_GET['isbn'];
+	$reviewStatement = $databaseConnection->query("SELECT * FROM reviews WHERE isbn = '$isbn'");
+	$bookDetailsStatement = $databaseConnection->query("SELECT * FROM book WHERE isbn = '$isbn'");
+
+	$reviews = $reviewStatement->fetchAll(PDO::FETCH_ASSOC);
+	$bookDetails = $bookDetailsStatement->fetch(PDO::FETCH_ASSOC);
+	$bookTitle = $bookDetails['title'];
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,10 +39,10 @@
 	<table align="center" style="border:1px solid blue;">
 		<tr>
 			<td align="center">
-				<h5> Reviews For:</h5>
+				<h5>Reviews For:</h5>
 			</td>
 			<td align="left">
-				<h5> iuhdf</h5>
+				<h5><?php echo $bookTitle; ?></h5>
 			</td>
 		</tr>
 			
@@ -27,7 +50,20 @@
 			<td colspan="2">
 			<div id="bookdetails" style="overflow:scroll;height:200px;width:300px;border:1px solid black;">
 			<table>
-			<tr><p></p></tr><tr><p>good book</p></tr><tr><p>Good book1</p></tr>			</table>
+			<?php 
+				foreach ($reviews as $review) {
+					print "<tr><p>Username: ";
+					print $review['username'];
+					print "</p></tr>";
+					print "<tr><p>Comment: ";
+					print $review['comment'];
+					print "</p></tr>";
+					print "<tr><p>Rating: ";
+					print $review['rating'];
+					print "/5</p></tr><hr>";
+				}
+			?>
+			</table>
 			</div>
 			</td>
 		</tr>

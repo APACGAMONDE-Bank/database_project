@@ -124,8 +124,8 @@
     								print "</tr>";
     								print "<tr>";
     									print "<td>";
-    										print '<form action="review.php" method="POST">';
-    											print '<input type="hidden" value="' . $row['isbn'] . '">';
+    										print '<form action="review.php" method="get">';
+    											print '<input type="hidden" name = "isbn" value="' . $row['isbn'] . '">';
     											print '<input type="submit" value="Reviews">';
     										print '</form>';
     										
