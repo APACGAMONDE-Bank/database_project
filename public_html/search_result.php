@@ -7,20 +7,7 @@
 		if (isset($_SESSION['username']))
 		{
 			// Database Connection
-			$servername = "localhost";
-			$db_username = "201501_471_02";
-			$password = "cade&stefano";
-			$database = "db201501_471_g02";
-
-			try {
-				$databaseConnection = new PDO("mysql:host=$servername;dbname=$database", $db_username, $password);
-				
-				// set the PDO error mode to exception
-				$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			}
-			catch(PDOException $e) {
-				echo "Connection failed: " . $e->getMessage();
-			}
+			$databaseConnection = getDatabaseConnection();
 
 			$username = $_SESSION['username'];
 			$addToCartStatement = $databaseConnection->prepare("INSERT IGNORE INTO cart_items (username, isbn, quantity) VALUES ('$username', '$isbn', 1)");
@@ -43,20 +30,7 @@
 	}
 
 	// Database Connection
-	$servername = "localhost";
-	$db_username = "201501_471_02";
-	$password = "cade&stefano";
-	$database = "db201501_471_g02";
-
-	try {
-		$databaseConnection = new PDO("mysql:host=$servername;dbname=$database", $db_username, $password);
-		
-		// set the PDO error mode to exception
-		$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	}
-	catch(PDOException $e) {
-		echo "Connection failed: " . $e->getMessage();
-	}
+	$databaseConnection = getDatabaseConnection();
 
 	//get number of items in cart
 	$numberOfItemsInCart = getNumberOfCartItems();
@@ -65,31 +39,33 @@
 	$searchTerm = $_GET['searchfor'];
 	$searchAttribute = $_GET['searchon'];
 	$searchCategory = $_GET['category'];
+	$searchTable = "(book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher)";
+	$searchAuthorNameFields = "first_name LIKE '%$searchTerm%' OR middle_name LIKE '%$searchTerm%' OR last_name LIKE '%$searchTerm%'";
 	
 	if ($searchAttribute === 'anywhere'){ //search term can match publisher, author, isbn, or title
 		if($searchCategory === 'all'){ //category is unspecified
-			$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE isbn LIKE '%$searchTerm%' OR title LIKE '%$searchTerm%' OR first_name LIKE '%$searchTerm%' OR middle_name LIKE '%$searchTerm%' OR last_name LIKE '%$searchTerm%' OR name LIKE '%$searchTerm%'");
+			$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE isbn LIKE '%$searchTerm%' OR title LIKE '%$searchTerm%' OR $searchAuthorNameFields OR name LIKE '%$searchTerm%'");
 		} 
 		else { //category is specified
-			$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE category = '$searchCategory' AND (isbn LIKE '%$searchTerm%' OR title LIKE '%$searchTerm%' OR first_name LIKE '%$searchTerm%' OR middle_name LIKE '%$searchTerm%' OR last_name LIKE '%$searchTerm%' OR name LIKE '%$searchTerm%')");
+			$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE category = '$searchCategory' AND (isbn LIKE '%$searchTerm%' OR title LIKE '%$searchTerm%' OR $searchAuthorNameFields OR name LIKE '%$searchTerm%')");
 		}
 	} 
 	else { //seach attribute is specified
 		if ($searchAttribute == "author")
 		{
 			if($searchCategory === 'all'){ //category is unspecified
-			$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE first_name LIKE '%$searchTerm%' OR middle_name LIKE '%$searchTerm%' OR last_name LIKE '%$searchTerm%'");
+			$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE $searchAuthorNameFields");
 			} 
 			else { //category is specified
-				$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE category = '$searchCategory' AND (first_name LIKE '%$searchTerm%' OR middle_name LIKE '%$searchTerm%' OR last_name LIKE '%$searchTerm%')");
+				$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE category = '$searchCategory' AND ($searchAuthorNameFields)");
 			}
 		}
 		else {
 			if($searchCategory === 'all'){ //category is unspecified
-				$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE $searchAttribute LIKE '%$searchTerm%'");
+				$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE $searchAttribute LIKE '%$searchTerm%'");
 			} 
 			else { //category is specified
-				$searchStatement = $databaseConnection->prepare("SELECT * FROM (book NATURAL JOIN author NATURAL JOIN written_by NATURAL JOIN publisher) WHERE category = '$searchCategory' AND $searchAttribute LIKE '%$searchTerm%'");
+				$searchStatement = $databaseConnection->prepare("SELECT * FROM $searchTable WHERE category = '$searchCategory' AND $searchAttribute LIKE '%$searchTerm%'");
 			}
 		}
 	}
@@ -101,10 +77,8 @@
 <body>
 	<table align="center" style="border:1px solid blue;">
 		<tr>
-			<td align="left">
-				
+			<td align="left">			
 					<h6> <fieldset>Your Shopping Cart has <?php echo $numberOfItemsInCart?> items</fieldset> </h6>
-				
 			</td>
 			<td>
 				&nbsp
@@ -153,7 +127,6 @@
     							print "<strong>ISBN:</strong> " . $row['isbn'] . ", <strong>Price:</strong> $" . $row['price'] . "<br>";
     						print "<hr></td>";
     					print "</tr>";	
-    					//print_r($row['category']);
     				}
     			} 
     			if ($resultCount === 0)
