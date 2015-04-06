@@ -10,7 +10,7 @@
 			$databaseConnection = getDatabaseConnection();
 
 			$username = $_SESSION['username'];
-			$addToCartStatement = $databaseConnection->prepare("INSERT IGNORE INTO cart_items (username, isbn, quantity) VALUES ('$username', '$isbn', 1)");
+			$addToCartStatement = $databaseConnection->prepare("INSERT INTO cart_items (username, isbn, quantity) VALUES ('$username', '$isbn', 1) ON DUPLICATE KEY UPDATE quantity = quantity + 1");
 			$addToCartStatement->execute();
 		}
 		else {
@@ -105,7 +105,6 @@
     					print '<tr><th colspan="2"><hr style="margin:2px; padding:0px"></th></tr>';
     					print "<tr>";
     						print '<td style="padding:0px">';
-
     										print '<form action="" method="POST">';
     											print '<input style="width:90px; height:30px; margin-bottom=0px" type="submit" class="button" value="Add To Cart"/>';
     											print '<input type="hidden" name="isbn" id="isbn" value="' . $row['isbn'] . '"/>';
@@ -124,12 +123,11 @@
     							$getAuthorsStmnt->execute();
     							$authors = $getAuthorsStmnt->fetchAll(PDO::FETCH_ASSOC);
     							for ($i = 0; $i < sizeof($authors); $i++) {
-								if ($i !== 0) {
-									print ", ";
+									if ($i !== 0) {
+										print ", ";
+									}
+									print $authors[$i]['first_name'] . " " . $authors[$i]['last_name'];
 								}
-								print $authors[$i]['first_name'] . " " . $authors[$i]['last_name'];
-							}
-    							
     							print "<br><strong>Publisher:</strong> " . $row['name'] . ", " . $row['pub_date'] . "<br>";
     							print "<strong>Category:</strong> " . $row['category'] . "<br>";
     							print "<strong>ISBN:</strong> " . $row['isbn'] . ", <strong>Price:</strong> $" . $row['price'] . "<br>";
