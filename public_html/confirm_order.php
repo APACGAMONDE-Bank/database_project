@@ -36,7 +36,7 @@ $stmt->execute ();
 $cart_items = $stmt->fetchAll ( PDO::FETCH_ASSOC );
 
 // user is attempting a purchase
-if ($_SERVER ["REQUEST_METHOD"] == "POST" && $_POST ['btnbuyit'] === 'BUY IT!') {
+if ($_SERVER ["REQUEST_METHOD"] == "POST" && $_POST ['btnbuyit'] === 'Submit Order') {
 	// echo "try to buy!!!";
 	$paymentIsValid = true;
 	
