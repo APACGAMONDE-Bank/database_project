@@ -171,19 +171,19 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 			</tr>
 			<td colspan="2"><?php echo "{$userInfo['first_name']} {$userInfo['last_name']}"?></td>
 			<td rowspan="3" colspan="2"><input type="radio" name="cardgroup"
-				value="profile_card" checked>Use Credit card on file <br /><?php echo "{$userInfo['card_type']} <br> {$userInfo['card_number']} - {$userInfo['card_exp_month']}/{$userInfo['card_exp_year']}";?><br />
+				value="profile_card" checked>Use Credit Card on File <br /><?php echo "{$userInfo['card_type']} <br> {$userInfo['card_number']} - {$userInfo['card_exp_month']}/{$userInfo['card_exp_year']}";?><br />
 				<input type="radio" name="cardgroup" value="new_card"
 				<?php if (isset($_POST['cardgroup']) && $_POST['cardgroup']=="new_card") echo "checked";?>>New
 				Credit Card<br /> <select id="credit_card" name="credit_card">
-					<option selected disabled>select a card type</option>
+					<option selected disabled>Card Type</option>
 					<option>VISA</option>
 					<option>MASTERCARD</option>
 					<option>DISCOVER</option>
 			</select> <input type="text" id="card_number" name="card_number"
-				placeholder="Credit card number"
+				placeholder="Card Number"
 				value="<?php echo $validator->sanitized['card_number'] ?>"></input>
-				<br />Exp date<input type="text" id="card_expiration"
-				name="card_expiration" placeholder="mm/yy"
+				<br />Expiration Date: <input type="text" id="card_expiration"
+				name="card_expiration" placeholder="MM/YY"
 				value="<?php echo $validator->sanitized['card_expiration'] ?>"> </input></td>
 			<tr>
 				<td colspan="2"><?php echo "{$userInfo['street']}";?></td>
@@ -221,12 +221,12 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 								$titleAndPrice = $titleAndPriceStmt->fetch ( PDO::FETCH_ASSOC );
 								echo "<tr>";
 								
-								echo '<td style="font-size:80%;">';
+								echo '<td style="font-size:90%;">';
 								echo "{$titleAndPrice['title']}";
 								
 								$authorsStmnt->execute ();
 								$authorNames = $authorsStmnt->fetchAll ( PDO::FETCH_ASSOC );
-								echo '<div style="font-size:80%">';
+								echo '<div style="font-size:90%">';
 								echo "<strong>By: </strong>";
 								$count = 0;
 								foreach ( $authorNames as $author ) {
@@ -235,7 +235,7 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 									}
 									echo "{$author['first_name']} {$author['middle_name']} {$author['last_name']}";
 								}
-								echo "<br><strong>Price: </strong>" . $titleAndPrice ['price'];
+								echo "<br><strong>Price: </strong>$" . number_format($titleAndPrice['price'], 2);
 								echo '</div>';
 								echo "</td>";
 								
@@ -244,8 +244,8 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 								//update shipping
 								$shipping += ($row['quantity'] * $shippingPerBook);
 								
-								echo "<td style='font-size:80%;text-align:center;'>{$row['quantity']}</td>";
-								echo "<td style='font-size:60%'>\$$bookTimesQuantity</td>";
+								echo "<td style='font-size:90%;text-align:center;'>{$row['quantity']}</td>";
+								echo "<td style='font-size:90%'>\$" . number_format($bookTimesQuantity, 2) . "</td>";
 								
 								$subtotal += $bookTimesQuantity;
 								echo "</tr>";
@@ -270,16 +270,16 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 				<td align="right">
 					<div id="bookdetails"
 						style="overflow: scroll; height: 100px; width: 260px; border: 1px solid black;">
-						SubTotal:$<?php echo "$subtotal";?>
-						<br>Shipping_Handling:$<?php echo "$shipping";?>
-						<br>_______<br>
-						Total:$<?php echo $grandTotal;?>
+						Subtotal: $<?php echo number_format($subtotal, 2);?>
+						<br>Shipping and Handling: $<?php echo number_format($shipping, 2);?>
+						<br>__________<br>
+						<b>Total</b>: $<?php echo number_format($grandTotal, 2);?>
 					</div>
 				</td>
 			</tr>
 			<tr>
 				<td align="right"><input type="submit" id="buyit" name="btnbuyit"
-					value="BUY IT!"></td>
+					value="Submit Order"></td>
 		<input type="hidden" name="shipping_cost" value="<?php echo $shipping?>" />
 		</form>
 		<td align="right">
