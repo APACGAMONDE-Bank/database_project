@@ -102,7 +102,7 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 			// new customer created successfully
 			$_SESSION ['username'] = $validator->sanitized ['username'];
 			// came from checkout so we'll populate the new user's cart, and send them back to checkout
-			if (isset ( $_SESSION ['came_from_checkout'] )) {
+			if (isset ( $_GET ['came_from_checkout'] )) {
 				// POPULATE USER'S DB CART FROM THEIR SESSION CART HERE!!!!!!
 				try {
 				$conn->beginTransaction ();
@@ -122,7 +122,7 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 					$conn->rollBack();
 					$e->getMessage();
 				}
-				unset ( $_SESSION ['came_from_checkout'] );
+				//unset ( $_SESSION ['came_from_checkout'] );
 				header ( "Location:confirm_order.php" );
 			} else {
 				header ( "Location:search.php" );

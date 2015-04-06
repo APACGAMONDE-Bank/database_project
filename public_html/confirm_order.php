@@ -26,7 +26,7 @@ $conn = getDatabaseConnection ();
 if (! isset ( $_SESSION ['username'] )) {
 	// we set the variable below so that the customer_registration page knows what page to go to next
 	$_SESSION ['came_from_checkout'] = true;
-	header ( "Location:customer_registration.php" );
+	header ( "Location:customer_registration.php?came_from_checkout=true" );
 	exit ();
 }
 
