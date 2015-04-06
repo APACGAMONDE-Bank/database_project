@@ -13,7 +13,7 @@ $shipping = 0;
 // get our connection
 $conn = getDatabaseConnection ();
 
-
+//var_dump($_SESSION['username']);
 
 // for testing
 // unset($_SESSION['username']);
@@ -25,7 +25,7 @@ $conn = getDatabaseConnection ();
 // merge their session cart with their db cart_items or something of that nature
 if (! isset ( $_SESSION ['username'] )) {
 	// we set the variable below so that the customer_registration page knows what page to go to next
-	$_SESSION ['came_from_checkout'] = true;
+	//$_SESSION ['came_from_checkout'] = true;
 	header ( "Location:customer_registration.php?came_from_checkout=true" );
 	exit ();
 }

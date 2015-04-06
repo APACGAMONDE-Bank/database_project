@@ -61,4 +61,24 @@ class SessionCartItems {
 		return $arrayOfAssociativeArrays;
 	}
 }
+
+function getNumberOfCartItems() {
+	$numberOfItems = 0;
+	if (isset($_SESSION['username'])) {
+		$conn = getDatabaseConnection();
+		try {
+			$getCartItemsStmnt = $conn->prepare("SELECT SUM(quantity) FROM cart_items WHERE username='{$_SESSION['username']}'");
+			$getCartItemsStmnt->execute();
+			$numberOfItems = $getCartItemsStmnt->fetchColumn();
+		} catch (PDOException $e) {
+			echo $e->getMessage();
+		}
+	} else if (isset($_SESSION['cart_items'])) {
+		$numberOfItems = 0;
+		foreach ($_SESSION['cart_items']->getCartItemsAssociativeArray() as $isbn => $quantity) {
+			$numberOfItems += $quantity;
+		}
+	} 
+	return $numberOfItems;
+}
 ?>

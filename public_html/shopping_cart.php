@@ -73,7 +73,7 @@ if (isset ( $_SESSION ['username'] )) {
 
 // following variable for disabling proceed to Checkout button if there are no items in the cart
 $numberOfDistinctItemsInCart = sizeof ( $cart_items );
-
+//echo getNumberOfCartItems();
 // print_r ( $cart_items);
 // echo "<br>";
 

@@ -58,6 +58,9 @@
 		echo "Connection failed: " . $e->getMessage();
 	}
 
+	//get number of items in cart
+	$numberOfItemsInCart = getNumberOfCartItems();
+	
 	// Search term setup
 	$searchTerm = $_GET['searchfor'];
 	$searchAttribute = $_GET['searchon'];
@@ -101,7 +104,7 @@
 		<tr>
 			<td align="left">
 				
-					<h6> <fieldset>Your Shopping Cart has 0 items</fieldset> </h6>
+					<h6> <fieldset>Your Shopping Cart has <?php echo $numberOfItemsInCart?> items</fieldset> </h6>
 				
 			</td>
 			<td>
@@ -166,8 +169,10 @@
 		</tr>
 		<tr>
 			<td align= "center">
-				<form action="confirm_order.php" method="get">
-					<input type="submit" value="Proceed To Checkout" id="checkout" name="checkout">
+				<form id="checkout" action="confirm_order.php" method="get">
+					<input type="submit" name="checkout_submit" id="checkout_submit"
+						value="Proceed to Checkout"
+						<?php if ($numberOfDistinctItemsInCart === 0) echo "disabled";?>>
 				</form>
 			</td>
 			<td align="center">
@@ -177,7 +182,7 @@
 			</td>
 			<td align="center">
 				<form action="welcome.php" method="post">
-					<input type="submit" name="exit" value="EXIT 3-B.com<?php unset($_SESSION['username']); ?>">
+					<input type="submit" name="exit" value="EXIT 3-B.com">
 				</form>
 			</td>
 		</tr>
