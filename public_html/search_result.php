@@ -141,8 +141,7 @@
     											print '<input type="hidden" name = "isbn" value="' . $row['isbn'] . '">';
     											print '<input type="submit" value="Reviews">';
     										print '</form>';
-    										
-    									print "</td>";
+    									print "<hr></td>";
     								print "</tr>";
     							print "</table>";
     						print "</td>";
@@ -152,8 +151,8 @@
     							print "<strong>Publisher:</strong> " . $row['name'] . ", " . $row['pub_date'] . "<br>";
     							print "<strong>Category:</strong> " . $row['category'] . "<br>";
     							print "<strong>ISBN:</strong> " . $row['isbn'] . ", <strong>Price:</strong> $" . $row['price'] . "<br>";
-    						print "</td>";
-    					print "</tr>";
+    						print "<hr></td>";
+    					print "</tr>";	
     					//print_r($row['category']);
     				}
     			} 
