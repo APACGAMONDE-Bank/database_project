@@ -166,7 +166,7 @@
 		</tr>
 		<tr>
 			<td align= "center">
-				<form action="" method="get">
+				<form action="confirm_order.php" method="get">
 					<input type="submit" value="Proceed To Checkout" id="checkout" name="checkout">
 				</form>
 			</td>
