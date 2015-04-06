@@ -148,8 +148,7 @@
 			<td align= "center">
 				<form id="checkout" action="confirm_order.php" method="get">
 					<input type="submit" name="checkout_submit" id="checkout_submit"
-						value="Proceed to Checkout"
-						<?php if ($numberOfDistinctItemsInCart === 0) echo "disabled";?>>
+						value="Proceed to Checkout" <?php if ($numberOfItemsInCart == 0) { echo "disabled";}?>>
 				</form>
 			</td>
 			<td align="center">
