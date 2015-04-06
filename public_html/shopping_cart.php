@@ -185,7 +185,7 @@ $numberOfDistinctItemsInCart = sizeof ( $cart_items );
 				id="recalculate_payment" value="Recalculate Payment">
 				</form></td>
 			<td align="center">&nbsp;</td>
-			<td align="center">Subtotal: <?php echo "\$$subtotal"?></td>
+			<td align="center">Subtotal: <?php echo "\$" . number_format($subtotal, 2)?></td>
 		</tr>
 	</table>
 </body>
