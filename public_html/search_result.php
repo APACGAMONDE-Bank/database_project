@@ -92,40 +92,32 @@
 		<tr>
 		<td style="width: 350px" colspan="3" align="center">
 			<div id="bookdetails" style="overflow:scroll;height:180px;width:400px;border:1px solid black;background-color:LightBlue">
-			<table style="font-size:x-small;">
+			<table style="font-size:small;">
 			<?php
 				$resultCount = 0;
     			if($searchStatement->execute()) {
     				while ($row = $searchStatement->fetch()) {
     					$resultCount++;
+    					print '<tr><th colspan="2"><hr style="margin:2px; padding:0px"></th></tr>';
     					print "<tr>";
-    						print '<td>';
-    							print '<table>';
-    								print "<tr>";
-    									print "<td>";
+    						print '<td style="padding:0px">';
+
     										print '<form action="" method="POST">';
-    											print '<input type="submit" class="button" value="Add To Cart"/>';
+    											print '<input style="width:90px; height:30px; margin-bottom=0px" type="submit" class="button" value="Add To Cart"/>';
     											print '<input type="hidden" name="isbn" id="isbn" value="' . $row['isbn'] . '"/>';
-    										print '</form>';
-    									print "</td>";
-    								print "</tr>";
-    								print "<tr>";
-    									print "<td>";
+    										print '</form><br>';
     										print '<form action="review.php" method="get">';
     											print '<input type="hidden" name = "isbn" value="' . $row['isbn'] . '">';
-    											print '<input type="submit" value="Reviews">';
+    											print '<input style="width:90px; height:30px" type="submit" value="Reviews">';
     										print '</form>';
-    									print "<hr></td>";
-    								print "</tr>";
-    							print "</table>";
     						print "</td>";
-    						print "<td>";
+    						print '<td style="padding:0px">';
     							print "<strong>Title:</strong> " .$row['title'] . "<br>";
     							print "<strong>By:</strong> " . $row['first_name'] . " " . $row['middle_name'] . " " . $row['last_name'] . "<br>";
     							print "<strong>Publisher:</strong> " . $row['name'] . ", " . $row['pub_date'] . "<br>";
     							print "<strong>Category:</strong> " . $row['category'] . "<br>";
     							print "<strong>ISBN:</strong> " . $row['isbn'] . ", <strong>Price:</strong> $" . $row['price'] . "<br>";
-    						print "<hr></td>";
+    						print "</td>";
     					print "</tr>";	
     				}
     			} 
