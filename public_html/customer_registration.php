@@ -148,6 +148,7 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST") {
 <title>CUSTOMER REGISTRATION</title>
 </head>
 <body>
+	<h3 style="text-align: center">New Customer Registration</h3>
 	<table align="center" style="border: 2px solid blue;">
 		<tr>
 			<form id="register" action="" method="post">

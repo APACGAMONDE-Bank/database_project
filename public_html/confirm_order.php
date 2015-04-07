@@ -159,9 +159,9 @@ $userInfo = $UserInfoStmnt->fetch ( PDO::FETCH_ASSOC );
 <!DOCTYPE HTML>
 <head>
 <title>Confirm Order</title>
-<header align="center">Confirm Order</header>
 </head>
 <body>
+	<h3 style="text-align: center">Confirm Order</h3>
 	<table align="center" style="border: 2px solid blue;">
 		<form id="buy"
 			action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"

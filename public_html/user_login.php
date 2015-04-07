@@ -57,6 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <title>User Login</title>
 </head>
 <body>
+	<h3 style="text-align: center">Returning User Login</h3>
 	<table align="center" style="border:2px solid blue;">
 		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" id="login_screen">
 		<tr>

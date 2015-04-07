@@ -5,7 +5,7 @@ require_once 'header.php';
 require_once 'form_validator.php';
 
 $conn = getDatabaseConnection ();
-
+// print_r($_SESSION);
 // FOR TESTING
 // $_SESSION ['username'] = 'jsmith';
 
@@ -52,7 +52,9 @@ if ($_SERVER ["REQUEST_METHOD"] == "POST" && (isset ( $_POST ['recalculate_payme
 					if (isset ( $_SESSION ['username'] )) { // update db cart_items quantity
 						$updateQtyStmnt->execute ();
 					} else { // update session cart_items quantity
-						$_SESSION ['cart_items']->updateQuantity ( $isbn, $newQuantity );
+						if (isset($_SESSION['cart_items'])){
+							$_SESSION ['cart_items']->updateQuantity ( $isbn, $newQuantity );
+						}
 					}
 				}
 			}
@@ -88,6 +90,7 @@ $numberOfDistinctItemsInCart = sizeof ( $cart_items );
 <title>Shopping Cart</title>
 </head>
 <body>
+	<h3 style="text-align: center">Shopping Cart</h3>
 	<table align="center" style="border: 2px solid blue;">
 		<tr>
 			<td align="center">

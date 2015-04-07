@@ -23,9 +23,9 @@ $dateAndTime = explode ( " ", $userAndInvoiceInfo ['sale_datetime'] );
 <!DOCTYPE HTML>
 <head>
 <title>Proof of Purchase</title>
-<header align="center">Proof of Purchase</header>
 </head>
 <body>
+	<h3 style="text-align: center">Proof of Purchase</h3>
 	<table align="center" style="border: 2px solid blue;">
 		<form id="buy" action="" method="post">
 			<tr>
