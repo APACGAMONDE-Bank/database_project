@@ -3,6 +3,7 @@
 <head>
 	<title>SEARCH - 3-B.com</title>
 </head>
+<h3 style="text-align: center">Book Search</h3>
 <body>
 	<table align="center" style="border:1px solid blue;">
 		<tr>

@@ -56,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
+<h3 style="text-align: center">Admin Login</h3>
 <table align="center" style="border:2px solid blue;">
 		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" id="adminlogin_screen">
 		<tr>

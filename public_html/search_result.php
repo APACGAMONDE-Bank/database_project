@@ -79,6 +79,7 @@
 	<title> Search Result - 3-B.com </title>
 </head>
 <body>
+	<h3 style="text-align: center">Search Results</h3>
 	<table align="center" style="border:1px solid blue;">
 		<tr>
 			<td align="left">			

@@ -1,5 +1,8 @@
 <!-- Figure 1: Welcome Screen by Alexander -->
 <?php
+require_once 'php_tools.php';
+require_once 'header.php';
+
 if ($_POST['submit']){
 	header('Location:'.$_POST['group1']);
 }
@@ -9,6 +12,8 @@ if ($_POST['submit']){
 //if a user has gotten to the welcome page via an exit button, let's log them out
 if (isset($_POST['exit'])){
 	unset($_SESSION['username']);
+	unset($_SESSION['cart_items']);
+	//print_r($_SESSION);
 }
 ?>
 <html>

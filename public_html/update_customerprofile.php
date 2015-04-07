@@ -124,6 +124,7 @@ try {
 <head>
 <title>UPDATE CUSTOMER PROFILE</title>
 </head>
+<h3 style="text-align: center">Update Profile</h3>
 <body>
 	<form id="update_profile"
 		action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"
